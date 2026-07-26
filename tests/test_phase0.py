@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_version() -> None:
-    assert __version__ == "0.0.0"
+    assert __version__ == "0.1.0"
 
 
 def test_package_imports() -> None:
@@ -40,7 +40,8 @@ def test_config_loads() -> None:
     assert config["training"]["optimizer"] == "adamw"
     assert config["training"]["batch_size"] == 8
     assert config["experiment"]["seed"] == 42
-    assert config["tokenizer"]["path"] == "assets/tokenizer"
+    assert config["tokenizer"]["path"] == "assets/tokenizer/odyssey.model"
+    assert config["tokenizer"]["config"] == "configs/tokenizer.yaml"
 
 
 def test_config_yaml_parses_directly() -> None:
@@ -88,7 +89,13 @@ def test_required_docs_exist() -> None:
         "requirements.txt",
         "pyproject.toml",
         "configs/default.yaml",
+        "configs/tokenizer.yaml",
         "experiments/README.md",
+        "docs/tokenizer/architecture.md",
+        "papers/sentencepiece.md",
+        "papers/bpe.md",
+        "papers/gpt2-tokenizer.md",
+        "papers/tiktoken.md",
     ]
     for relative in required_files:
         assert (REPO_ROOT / relative).is_file(), f"missing file: {relative}"

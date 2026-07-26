@@ -2,8 +2,8 @@
 # All hyperparameters should eventually flow from config files.
 
 experiment:
-  id: ODY-0000
-  name: repository-initialization
+  id: ODY-0001
+  name: sentencepiece-baseline
   seed: 42
 
 model:
@@ -16,8 +16,9 @@ model:
   intermediate_size: 2048
 
 tokenizer:
-  path: assets/tokenizer
+  path: assets/tokenizer/odyssey.model
   type: sentencepiece
+  config: configs/tokenizer.yaml
 
 training:
   learning_rate: 3.0e-4

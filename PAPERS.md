@@ -6,8 +6,6 @@ Odyssey follows a **research-before-implementation** rule. Read the original wor
 
 ## Phase 0 — Ecosystem Orientation
 
-No implementation papers required for repository setup. Background reading:
-
 | Resource | Why |
 | --- | --- |
 | [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) | Intuition for attention and encoder/decoder stacks |
@@ -15,6 +13,17 @@ No implementation papers required for repository setup. Background reading:
 | [SentencePiece](https://github.com/google/sentencepiece) | Subword tokenization used in many LLMs |
 | [Weights & Biases Docs](https://docs.wandb.ai/) | Optional experiment tracking |
 | [Hydra](https://hydra.cc/docs/intro/) | Optional hierarchical configs |
+
+---
+
+## Phase 1 — Tokenization Research *(complete)*
+
+| Paper / Study | Summary |
+| --- | --- |
+| SentencePiece (Kudo & Richardson) | [papers/sentencepiece.md](papers/sentencepiece.md) |
+| BPE for rare words (Sennrich et al.) | [papers/bpe.md](papers/bpe.md) |
+| GPT-2 byte-level BPE | [papers/gpt2-tokenizer.md](papers/gpt2-tokenizer.md) |
+| TikToken | [papers/tiktoken.md](papers/tiktoken.md) |
 
 ---
 
@@ -28,5 +37,3 @@ No implementation papers required for repository setup. Background reading:
 | SwiGLU | *GLU Variants Improve Transformer* (Shazeer) | 7 |
 | GPT-style LMs | GPT / Llama technical reports | 9–10 |
 | DPO | *Direct Preference Optimization* (Rafailov et al.) | 14 |
-
-Add notes under `papers/` as each phase begins.

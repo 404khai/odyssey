@@ -14,11 +14,12 @@ Development proceeds **one phase at a time**. Complete, document, commit, then w
 
 ---
 
-## Phase 1 — Tokenizer Research
+## Phase 1 — Tokenizer Research *(complete)*
 
-- SentencePiece
-- Vocabulary design
+- SentencePiece reference pipeline
+- Vocabulary design + special tokens
 - Normalization strategies
+- Paper summaries + ODY-0001 baseline
 
 ---
 
