@@ -1,0 +1,71 @@
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Type checkers / linters
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Checkpoints and model artifacts
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.gguf
+
+# Experiment tracking
+wandb/
+runs/
+lightning_logs/
+tensorboard/
+tb_logs/
+
+# Datasets (keep directory structure via .gitkeep)
+datasets/raw/*
+!datasets/raw/.gitkeep
+datasets/processed/*
+!datasets/processed/.gitkeep
+
+# Temporary logs and outputs
+logs/
+tmp/
+temp/
+*.log
+outputs/
+multirun/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment secrets
+.env
+.env.*
+!.env.example

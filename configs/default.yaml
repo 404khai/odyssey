@@ -1,0 +1,32 @@
+# Odyssey default configuration
+# All hyperparameters should eventually flow from config files.
+
+experiment:
+  id: ODY-0000
+  name: repository-initialization
+  seed: 42
+
+model:
+  name: odyssey-tiny
+  vocabulary_size: 32000
+  context_length: 2048
+  hidden_size: 768
+  num_layers: 12
+  num_heads: 12
+  intermediate_size: 2048
+
+tokenizer:
+  path: assets/tokenizer
+  type: sentencepiece
+
+training:
+  learning_rate: 3.0e-4
+  optimizer: adamw
+  batch_size: 8
+  weight_decay: 0.1
+  warmup_steps: 100
+  max_steps: 10000
+
+logging:
+  backend: tensorboard   # options: tensorboard | wandb
+  log_interval: 10

@@ -1,0 +1,21 @@
+# Core research stack (Python 3.12+)
+torch
+numpy
+transformers
+datasets
+sentencepiece
+matplotlib
+pyyaml
+tensorboard
+
+# Dev / quality
+black
+ruff
+isort
+mypy
+pytest
+types-PyYAML
+
+# Optional experiment tooling
+# wandb
+# hydra-core
