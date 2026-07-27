@@ -78,7 +78,7 @@ def test_required_directories_exist() -> None:
 def test_required_docs_exist() -> None:
     required_files = [
         "README.md",
-        "AGENTS.md",
+        # AGENTS.md is intentionally gitignored (local agent instructions only).
         "ROADMAP.md",
         "MODEL_CARD.md",
         "CHANGELOG.md",
