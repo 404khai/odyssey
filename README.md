@@ -6,10 +6,10 @@
 
 ---
 
-**Status:** Research Project — Phase 0 complete  
+**Status:** Research Project — Phase 1 complete  
 **Language:** Python 3.12+  
 **Framework:** PyTorch  
-**Target Runtime:** [Phalanx Runtime](../runtime)  
+**Target Runtime:** [Phalanx Runtime](https://github.com/404khai/phalanx)  
 **Architecture:** Decoder-only Transformer
 
 ---
@@ -18,16 +18,19 @@
 
 Odyssey is a research repository for building a small, carefully engineered decoder-only language model optimized for **reasoning**, not autocomplete.
 
-This phase establishes engineering standards, project structure, tooling, documentation, testing infrastructure, and research workflow. No model training is implemented yet.
+Phase 0 established engineering standards and research workflow.  
+Phase 1 adds a **SentencePiece reference tokenizer** (research + training/encoding pipeline). This is **not** the final Odyssey tokenizer — Phase 2 implements custom BPE from first principles.
 
 ```mermaid
-flowchart LR
-    Research --> Repository
-    Repository --> Documentation
-    Repository --> Experiments
-    Repository --> SourceCode
-    Repository --> Tests
-    Repository --> Assets
+flowchart TD
+    RawText --> Normalizer
+    Normalizer --> SentencePieceTrainer
+    SentencePieceTrainer --> Vocabulary
+    Vocabulary --> TokenizerModel
+    TokenizerModel --> Encoder
+    Encoder --> TokenIDs
+    TokenIDs --> Decoder
+    Decoder --> RecoveredText
 ```
 
 ---
@@ -59,6 +62,60 @@ Odyssey should not merely generate code. It should understand **why** the code e
 
 ---
 
+## Tokenizer Overview
+
+Phase 1 ships `tokenizer/sentencepiece/` as the reference implementation:
+
+| Capability | Status |
+| --- | --- |
+| Config-driven training (`configs/tokenizer.yaml`) | Done |
+| Unicode / whitespace normalization | Done |
+| Special tokens (`<pad/bos/eos/unk/mask/system/user/assistant>`) | Done |
+| Encode / decode / save / load | Done |
+| Inspector CLI | Done |
+| Stats (compression, unk rate, speed) | Done |
+| Paper summaries | Done |
+| Custom BPE (Odyssey-owned) | Phase 2 |
+
+Architecture details: [docs/tokenizer/architecture.md](docs/tokenizer/architecture.md)
+
+### Training Instructions
+
+```bash
+source venv/bin/activate
+
+# Fetch TinyStories sample used by ODY-0001
+python scripts/prepare_tinystories_sample.py --max-stories 50000
+
+# Train reference SentencePiece model
+python scripts/train.py \
+  --input datasets/raw/sample.txt \
+  --vocab-size 32000
+```
+
+### Usage Examples
+
+```bash
+# Inspect tokenization
+python scripts/inspect_tokenizer.py \
+  --model assets/tokenizer/odyssey.model \
+  --text "Build authentication API" \
+  --show-specials
+```
+
+```python
+from tokenizer import OdysseySentencePieceTokenizer, load_tokenizer_config
+
+tok = OdysseySentencePieceTokenizer(load_tokenizer_config())
+tok.load("assets/tokenizer/odyssey.model")
+
+ids = tok.encode("Build authentication API")
+print(tok.decode(ids))
+print(tok.inspect("Build authentication API").render())
+```
+
+---
+
 ## Architecture Vision
 
 ```
@@ -67,22 +124,20 @@ User → Parallax → Phalanx Server → Phalanx Runtime → Odyssey
 
 Odyssey's responsibility is **reasoning**. Other models may execute. Odyssey plans.
 
-Planned stack:
-
-| Layer | Role |
-| --- | --- |
-| Tokenizer | SentencePiece / custom BPE |
-| Embeddings | Token + RoPE positional encodings |
-| Decoder | RMSNorm, MHA, SwiGLU blocks |
-| Training | AdamW, schedulers, mixed precision |
-| Evaluation | Perplexity + reasoning benchmarks |
-| Alignment | Instruction tuning, DPO |
+| Layer | Role | Status |
+| --- | --- | --- |
+| Tokenizer | SentencePiece reference → custom BPE | Phase 1 / next Phase 2 |
+| Embeddings | Token + RoPE positional encodings | Planned |
+| Decoder | RMSNorm, MHA, SwiGLU blocks | Planned |
+| Training | AdamW, schedulers, mixed precision | Planned |
+| Evaluation | Perplexity + reasoning benchmarks | Planned |
+| Alignment | Instruction tuning, DPO | Planned |
 
 ---
 
 ## Installation
 
-Requires **Python 3.12+**. If multiple Python versions are installed, create the venv explicitly:
+Requires **Python 3.12+**:
 
 ```bash
 cd odyssey
@@ -92,20 +147,7 @@ pip install --upgrade pip
 pip install -e ".[dev]"
 ```
 
-Or with `requirements.txt`:
-
-```bash
-pip install -r requirements.txt
-pip install -e .
-```
-
-Optional experiment tooling:
-
-```bash
-pip install -e ".[tracking]"   # wandb, hydra-core
-```
-
-### Verify Phase 0
+### Verify
 
 ```bash
 pytest
@@ -121,62 +163,43 @@ mypy odyssey model tokenizer training evaluation
 
 ```
 odyssey/
-├── configs/           # YAML hyperparameters
-├── datasets/
-│   ├── raw/           # Immutable source data (gitignored)
-│   └── processed/     # Derived datasets (gitignored)
-├── docs/
-│   ├── architecture/
-│   ├── training/
-│   ├── tokenizer/
-│   └── evaluation/
-├── papers/            # Reading notes / paper links
-├── experiments/       # Experiment logs (ODY-XXXX)
-├── model/             # Transformer components (future)
-├── tokenizer/         # Tokenizer tooling (future)
-├── training/          # Training loops (future)
-├── evaluation/        # Benchmarks (future)
-├── odyssey/           # Shared package utilities (config, etc.)
-├── tests/
-├── scripts/
-├── assets/
-├── .github/
-├── AGENTS.md
-├── ROADMAP.md
-├── MODEL_CARD.md
-├── CHANGELOG.md
-├── PAPERS.md
-├── EXPERIMENTS.md
-├── RESEARCH.md
-├── LICENSE
-├── requirements.txt
-└── pyproject.toml
+├── configs/                 # default.yaml, tokenizer.yaml
+├── datasets/raw|processed/  # corpora (gitignored; regenerate via scripts)
+├── docs/tokenizer/          # architecture + SentencePiece notes
+├── papers/                  # research summaries
+├── experiments/             # ODY-XXXX logs
+├── tokenizer/sentencepiece/ # Phase 1 reference implementation
+├── scripts/train.py         # training CLI
+├── scripts/inspect_tokenizer.py
+├── assets/tokenizer/        # generated .model/.vocab
+├── model/ training/ evaluation/ tests/
+└── ...
 ```
 
 ---
 
-## Future Roadmap
-
-See [ROADMAP.md](ROADMAP.md) for all phases (0–20).
+## Repository Progress
 
 | Phase | Focus | Status |
 | --- | --- | --- |
 | 0 | Repository setup & research foundation | **Complete** |
-| 1 | Tokenizer research | Next |
-| 2–9 | Custom tokenizer → full decoder | Planned |
-| 10–12 | Training, checkpointing, evaluation | Planned |
-| 13–16 | Instruction tuning, DPO, SE data, reasoning eval | Planned |
-| 17–20 | Optimization → Odyssey v1 release | Planned |
+| 1 | Tokenizer research & SentencePiece pipeline | **Complete** |
+| 2 | Custom Odyssey BPE tokenizer | Next |
+| 3–9 | Embeddings → full decoder | Planned |
+| 10–20 | Training → Odyssey v1 release | Planned |
+
+Full plan: [ROADMAP.md](ROADMAP.md)
 
 ---
 
 ## Experiment Tracking
 
-Experiments use IDs like `ODY-0000`. Conventions live in [experiments/README.md](experiments/README.md) and the log in [EXPERIMENTS.md](EXPERIMENTS.md).
-
 | ID | Purpose | Result |
 | --- | --- | --- |
 | ODY-0000 | Repository initialization | Successful |
+| ODY-0001 | Baseline SentencePiece tokenizer | Successful |
+
+Conventions: [experiments/README.md](experiments/README.md)
 
 ---
 
@@ -191,6 +214,7 @@ Experiments use IDs like `ODY-0000`. Conventions live in [experiments/README.md]
 | [EXPERIMENTS.md](EXPERIMENTS.md) | Experiment log |
 | [MODEL_CARD.md](MODEL_CARD.md) | Model card (placeholders) |
 | [CHANGELOG.md](CHANGELOG.md) | Version history |
+| [tokenizer/README.md](tokenizer/README.md) | Tokenizer package docs |
 
 ---
 

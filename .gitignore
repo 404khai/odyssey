@@ -46,6 +46,11 @@ datasets/raw/*
 datasets/processed/*
 !datasets/processed/.gitkeep
 
+# Trained tokenizer binaries / local corpora (regenerate via scripts/)
+assets/tokenizer/*.model
+assets/tokenizer/*.vocab
+assets/tokenizer/metadata.json
+
 # Temporary logs and outputs
 logs/
 tmp/

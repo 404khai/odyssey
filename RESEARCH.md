@@ -48,6 +48,14 @@ Build evaluations that capture planning quality, architectural judgment, and fai
 - Repository layout, config loading, lint/test tooling, and experiment IDs are in place.
 - No empirical ML results yet — by design.
 
+## Phase 1 Findings
+
+- SentencePiece Unigram is a solid reference for LLaMA-like pipelines.
+- On 50k TinyStories stories, achievable vocab saturated near **17k** despite a 32k request — corpus diversity dominates `vocab_size`.
+- Chat/role special tokens work cleanly as SentencePiece `user_defined_symbols` with stable core IDs (pad/bos/eos/unk = 0/1/2/3).
+- Encode → decode round-trips are reliable after explicit NFKC + whitespace normalization.
+- Next research step: own the BPE merge process (Phase 2) and compare compression / unk rate against ODY-0001.
+
 ---
 
 ## Open Decisions
@@ -57,3 +65,5 @@ Build evaluations that capture planning quality, architectural judgment, and fai
 | Experiment tracker | TensorBoard default; W&B optional | Tentative |
 | Config system | Plain YAML now; Hydra optional later | Tentative |
 | First model size | Odyssey Tiny (~100M) for pipeline validation | Planned |
+| Final tokenizer alphabet | Characters vs bytes vs hybrid | Open (Phase 2) |
+| Production vocab size | 32k target vs corpus-driven size | Open |

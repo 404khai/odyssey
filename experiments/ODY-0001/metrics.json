@@ -1,0 +1,11 @@
+{
+  "vocab_size": 17047,
+  "average_token_length": 4.2980243572395125,
+  "compression_ratio": 4.292611637347767,
+  "unknown_token_frequency": 0.002165087956698241,
+  "encoding_tokens_per_second": 768066.1898911969,
+  "decoding_tokens_per_second": 5688553.615807944,
+  "model_file_size_bytes": 532446,
+  "training_seconds": 154.98832183300692,
+  "corpus_lines": 50000
+}
