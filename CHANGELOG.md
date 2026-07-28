@@ -7,6 +7,31 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.2.0] — 2026-07-28
+
+### Added
+
+- Owned byte-level BPE library (`tokenizer/odyssey_tokenizer`)
+- Clean API: `OdysseyTokenizer.load/encode/decode`
+- CLI entrypoint `odyssey-tokenizer` (train/encode/decode/inspect/benchmark/visualize)
+- Merge visualizer + compression plots
+- Benchmark suite with memory tracing
+- Library docs under `tokenizer/docs/`
+- Experiment `ODY-0002`
+
+### Changed
+
+- Tokenizer packaged as a reusable library for Phalanx Runtime consistency
+- SentencePiece config moved to `configs/tokenizer_sentencepiece.yaml` (reference)
+- Primary config `configs/tokenizer.yaml` now targets BPE
+
+### Notes
+
+- ODY-0002 trained a **2048**-piece model on 1000 TinyStories lines for a practical Python baseline
+- Config default `vocab_size: 32000` remains available via CLI for larger runs
+
+---
+
 ## [0.1.0] — 2026-07-27
 
 ### Added

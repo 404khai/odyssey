@@ -70,4 +70,18 @@ Because whitespace is an explicit symbol, detokenization is largely reversible: 
 
 ## How Odyssey Will Use This Knowledge
 
-Phase 1 adopts SentencePiece as the reference pipeline for training, encoding, decoding, inspection, and metrics. Phase 2 will re-implement BPE from first principles, using SentencePiece outputs as a behavioral and quality baseline.
+Phase 1 adopted SentencePiece as the reference pipeline.  
+Phase 2 replaced it for Odyssey training with an owned byte-level BPE library
+(`odyssey_tokenizer`) while keeping SentencePiece available for regression
+comparisons (`ODY-0001` vs `ODY-0002`).
+
+### Phase 2 revisit — SentencePiece vs Odyssey BPE
+
+| | SentencePiece | Odyssey BPE |
+| --- | --- | --- |
+| Dependency | Third-party | First-party |
+| Train speed | Fast (C++) | Slower (Python) |
+| Inspectability | Opaque binary | Plain merges + vocab |
+| Serving story | Harder to mirror in Rust | Designed for Phalanx port |
+
+Tradeoff accepted: clarity + ownership now; Rust acceleration later.

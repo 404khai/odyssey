@@ -23,6 +23,8 @@ def test_special_token_surfaces_include_chat_roles() -> None:
         "<system>",
         "<user>",
         "<assistant>",
+        "<tool>",
+        "<think>",
     ):
         assert expected in surfaces
 

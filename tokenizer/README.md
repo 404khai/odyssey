@@ -1,94 +1,86 @@
-# Tokenizer
+# Odyssey Tokenizer Library
 
-Phase 1 ships a **SentencePiece reference tokenizer**.  
-Phase 2 will replace the internals with Odyssey’s own BPE implementation.
-
----
-
-## Layout
+Reusable **byte-level BPE** tokenizer owned by Odyssey.
 
 ```
 tokenizer/
-├── __init__.py
-├── README.md
-└── sentencepiece/
-    ├── config.py           # YAML → TokenizerConfig
-    ├── special_tokens.py   # Reserved token documentation
-    ├── normalizer.py       # Unicode / whitespace cleanup
-    ├── trainer.py          # SentencePiece training
-    ├── encoder.py          # Text → IDs
-    ├── decoder.py          # IDs → Text
-    ├── tokenizer.py        # Public API
-    └── utils.py            # Shared helpers
+├── odyssey_tokenizer/   # importable library
+├── cli/                 # `odyssey-tokenizer` entrypoint
+├── benchmarks/          # encode/decode / memory suite
+├── tests/               # library unit + integration tests
+├── docs/                # algorithm & architecture notes
+├── sentencepiece/       # Phase 1 reference backend
+└── README.md
 ```
 
----
+## Why a separate library?
 
-## Special Tokens
+Training and inference must share **identical** tokenization.
 
-| Name | Surface | ID | Purpose |
-| --- | --- | --- | --- |
-| pad | `<pad>` | 0 | Batch padding |
-| bos | `<bos>` | 1 | Begin sequence |
-| eos | `<eos>` | 2 | End sequence / stop |
-| unk | `<unk>` | 3 | Unknown fallback |
-| mask | `<mask>` | dynamic | Masking experiments |
-| system | `<system>` | dynamic | Chat system turn |
-| user | `<user>` | dynamic | Chat user turn |
-| assistant | `<assistant>` | dynamic | Chat assistant turn |
+Phalanx Runtime can consume this Python library today and later a Rust port with
+the same `vocab.json` + `merges.txt` artifacts — without depending on the model
+package layout.
 
-IDs for user-defined symbols are assigned by SentencePiece after the core controls.
-
----
-
-## Train
-
-```bash
-# Optional: fetch TinyStories sample used by ODY-0001
-python scripts/prepare_tinystories_sample.py --max-stories 5000
-
-python scripts/train.py \
-  --input datasets/raw/sample.txt \
-  --vocab-size 32000
-```
-
-Artifacts land under `assets/tokenizer/`:
-
-- `odyssey.model`
-- `odyssey.vocab`
-- `metadata.json`
-
----
-
-## Inspect
-
-```bash
-python scripts/inspect_tokenizer.py \
-  --model assets/tokenizer/odyssey.model \
-  --text "Build authentication API" \
-  --show-specials
-```
-
----
-
-## Python API
+## Public API
 
 ```python
-from tokenizer import OdysseySentencePieceTokenizer, load_tokenizer_config
+from odyssey_tokenizer import OdysseyTokenizer
 
-config = load_tokenizer_config()
-tok = OdysseySentencePieceTokenizer(config)
-tok.train("datasets/raw/sample.txt", vocab_size=8000)
-
-ids = tok.encode("Build authentication API")
-text = tok.decode(ids)
-print(tok.inspect("Build authentication API").render())
+tokenizer = OdysseyTokenizer.load("assets/tokenizer/bpe/odyssey.model")
+ids = tokenizer.encode("Build authentication API")
+text = tokenizer.decode(ids)
+print(tokenizer.inspect("Build authentication API").render())
 ```
 
----
+Train:
 
-## Configuration
+```python
+from odyssey_tokenizer import OdysseyTokenizer, load_bpe_config
 
-All knobs live in [`configs/tokenizer.yaml`](../configs/tokenizer.yaml).
+config = load_bpe_config()
+config.vocab_size = 4096
+config.training.max_lines = 3000
+tokenizer, result = OdysseyTokenizer.train(
+    "datasets/raw/sample.txt",
+    config=config,
+    save_path="assets/tokenizer/bpe/odyssey.model",
+)
+```
 
-Nothing tokenizer-related should be hardcoded at call sites.
+## CLI
+
+```bash
+odyssey-tokenizer train --input datasets/raw/sample.txt --vocab-size 4096 --max-lines 3000
+odyssey-tokenizer encode --model assets/tokenizer/bpe/odyssey.model --text "Hello"
+odyssey-tokenizer decode --model assets/tokenizer/bpe/odyssey.model --ids 12,45,90
+odyssey-tokenizer inspect --model assets/tokenizer/bpe/odyssey.model --text "Build authentication API" --show-merges
+odyssey-tokenizer benchmark --model assets/tokenizer/bpe/odyssey.model --input datasets/raw/sample.txt --limit 200
+odyssey-tokenizer visualize --model assets/tokenizer/bpe/odyssey.model --input datasets/raw/sample.txt
+```
+
+## Special tokens
+
+| ID | Surface | Purpose |
+| --- | --- | --- |
+| 0 | `<pad>` | Padding |
+| 1 | `<bos>` | Begin sequence |
+| 2 | `<eos>` | End sequence |
+| 3 | `<unk>` | Unknown (rare with byte-level BPE) |
+| 4+ | `<mask>`, `<system>`, `<user>`, `<assistant>`, `<tool>`, `<think>` | Chat / tooling / reasoning |
+
+Then IDs continue with the 256-byte alphabet and learned merges.
+
+## Artifacts
+
+A model directory contains:
+
+- `vocab.json` — token surface → id
+- `merges.txt` — ordered merge rules
+- `config.json` — frozen hyperparameters
+- `metadata.json` — training metrics
+
+## SentencePiece reference
+
+Phase 1 lives in `tokenizer/sentencepiece/` and
+`configs/tokenizer_sentencepiece.yaml`. It remains available for comparison
+(`ODY-0001`) but is **not** required to train Odyssey.

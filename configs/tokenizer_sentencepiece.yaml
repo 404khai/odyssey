@@ -1,0 +1,49 @@
+# Phase 1 SentencePiece reference configuration (kept for regressions)
+
+vocab_size: 32000
+character_coverage: 0.9995
+model_type: unigram
+
+pad_id: 0
+bos_id: 1
+eos_id: 2
+unk_id: 3
+
+user_defined_symbols:
+  - "<mask>"
+  - "<system>"
+  - "<user>"
+  - "<assistant>"
+  - "<tool>"
+  - "<think>"
+
+normalization:
+  form: NFKC
+  collapse_whitespace: true
+  preserve_newlines: true
+  strip: true
+
+training:
+  input_sentence_size: 0
+  shuffle_input_sentence: true
+  num_threads: 4
+  max_sentence_length: 8192
+  hard_vocab_limit: false
+
+paths:
+  model_prefix: assets/tokenizer/odyssey
+  model_file: assets/tokenizer/odyssey.model
+  vocab_file: assets/tokenizer/odyssey.vocab
+  metadata_file: assets/tokenizer/metadata.json
+
+special_tokens:
+  pad: "<pad>"
+  bos: "<bos>"
+  eos: "<eos>"
+  unk: "<unk>"
+  mask: "<mask>"
+  system: "<system>"
+  user: "<user>"
+  assistant: "<assistant>"
+  tool: "<tool>"
+  think: "<think>"

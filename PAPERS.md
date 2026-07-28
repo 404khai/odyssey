@@ -16,14 +16,14 @@ Odyssey follows a **research-before-implementation** rule. Read the original wor
 
 ---
 
-## Phase 1 — Tokenization Research *(complete)*
+## Phase 2 — Tokenization Research *(complete)*
 
 | Paper / Study | Summary |
 | --- | --- |
-| SentencePiece (Kudo & Richardson) | [papers/sentencepiece.md](papers/sentencepiece.md) |
-| BPE for rare words (Sennrich et al.) | [papers/bpe.md](papers/bpe.md) |
+| SentencePiece (Kudo & Richardson) | [papers/sentencepiece.md](papers/sentencepiece.md) — revisited vs Odyssey BPE |
+| BPE for rare words (Sennrich et al.) | [papers/bpe.md](papers/bpe.md) — implemented in `odyssey_tokenizer` |
 | GPT-2 byte-level BPE | [papers/gpt2-tokenizer.md](papers/gpt2-tokenizer.md) |
-| TikToken | [papers/tiktoken.md](papers/tiktoken.md) |
+| TikToken | [papers/tiktoken.md](papers/tiktoken.md) — speed target for Rust port |
 
 ---
 

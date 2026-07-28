@@ -1,5 +1,10 @@
-"""Tokenizer package — SentencePiece reference (Phase 1), custom BPE (Phase 2)."""
+"""Tokenizer package — Odyssey BPE library + SentencePiece reference."""
 
+from odyssey_tokenizer import (
+    BPEConfig,
+    OdysseyTokenizer,
+    load_bpe_config,
+)
 from tokenizer.sentencepiece import (
     OdysseySentencePieceTokenizer,
     SentencePieceTokenizer,
@@ -9,9 +14,12 @@ from tokenizer.sentencepiece import (
 )
 
 __all__ = [
+    "BPEConfig",
+    "OdysseyTokenizer",
     "OdysseySentencePieceTokenizer",
     "SentencePieceTokenizer",
     "SentencePieceTrainer",
     "TokenizerConfig",
+    "load_bpe_config",
     "load_tokenizer_config",
 ]

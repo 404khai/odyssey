@@ -31,7 +31,9 @@ jobs:
         run: ruff check .
 
       - name: Type check (mypy)
-        run: mypy odyssey model tokenizer training evaluation
+        run: |
+          mypy odyssey model tokenizer training evaluation
+          MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 
       - name: Tests
         run: pytest

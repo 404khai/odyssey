@@ -14,7 +14,7 @@
 | Parameters | TBD |
 | Context length | TBD (config default: 2048) |
 | Vocabulary size | TBD (config default: 32000) |
-| Tokenizer | SentencePiece Unigram reference (Phase 1); custom BPE planned |
+| Tokenizer | Odyssey byte-level BPE (`odyssey_tokenizer`); SentencePiece reference retained |
 | License | MIT |
 | Developers | Odyssey Contributors |
 | Languages | English *(planned)* |
