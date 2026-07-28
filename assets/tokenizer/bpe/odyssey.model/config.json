@@ -33,11 +33,11 @@
   ],
   "training": {
     "input_sentence_size": 0,
-    "max_lines": 1000,
+    "max_lines": 3000,
     "progress_every": 500,
     "seed": 42,
     "shuffle_input_sentence": true
   },
   "unk_id": 3,
-  "vocab_size": 2048
+  "vocab_size": 4096
 }

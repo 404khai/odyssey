@@ -24,4 +24,6 @@ Each note covers:
 | [loss.md](loss.md) | 10 | Outline (pre-implementation) |
 
 Code lives under `model/`. Architecture prose lives under `docs/architecture/`.
-These notes are the equation-level source of truth.
+
+**Normative contract:** [`../spec/`](../spec/README.md) (Odyssey Specification v1).  
+If `math/` and `spec/` disagree, **`spec/` wins**. These notes are pedagogical companions.

@@ -6,11 +6,21 @@
 
 ---
 
-**Status:** Research Project — Phase 3 complete  
+**Status:** Research Project — Phase 3 complete · **Spec v1.0.0** frozen  
 **Language:** Python 3.12+  
 **Framework:** PyTorch  
 **Target Runtime:** [Phalanx Runtime](https://github.com/404khai/phalanx)  
 **Architecture:** Decoder-only Transformer
+
+---
+
+## Odyssey Specification (source of truth)
+
+Architecture, tensor names, shapes, tokenizer, GGUF mapping, and the Phalanx runtime contract live in:
+
+**[`spec/`](spec/README.md)** — Specification **`1.0.0`**
+
+Phalanx Runtime must follow this spec; pedagogical notes in [`math/`](math/README.md) are non-normative.
 
 ---
 
