@@ -27,6 +27,18 @@ Odyssey follows a **research-before-implementation** rule. Read the original wor
 
 ---
 
+## Phase 3 — Embeddings *(complete)*
+
+| Paper / Study | Summary |
+| --- | --- |
+| Attention Is All You Need — Input Embeddings | [papers/transformer_embeddings.md](papers/transformer_embeddings.md) |
+| Word2Vec (Mikolov et al.) | [papers/word2vec.md](papers/word2vec.md) |
+| GloVe (Pennington et al.) | [papers/glove.md](papers/glove.md) |
+
+Math companion: [math/embeddings.md](math/embeddings.md)
+
+---
+
 ## Planned Reading (later phases)
 
 | Topic | Canonical paper / resource | Phase |

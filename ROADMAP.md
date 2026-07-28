@@ -32,10 +32,13 @@ Development proceeds **one phase at a time**. Complete, document, commit, then w
 
 ---
 
-## Phase 3 — Embedding Layer
+## Phase 3 — Embedding Layer *(complete)*
 
-- Token embeddings
-- Weight initialization
+- Token embeddings (`OdysseyEmbedding`)
+- Configurable weight initialization
+- Shape validation, inspector, benchmarks
+- Math notes under `math/`
+- ODY-0003 baseline
 
 ---
 

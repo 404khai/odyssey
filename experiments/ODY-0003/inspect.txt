@@ -1,0 +1,10 @@
+OdysseyEmbedding
+  vocab_size:           32,000
+  hidden_size:          768
+  embedding_shape:      (32000, 768)
+  parameter_count:      24,576,000
+  trainable_parameters:  24,576,000
+  memory (weights):     98,304,000 bytes (93.750 MiB)
+  padding_idx:          0
+  init_strategy:        xavier_uniform
+  device / dtype:       cpu / float32
