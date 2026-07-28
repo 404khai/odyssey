@@ -7,6 +7,28 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.3.0] — 2026-07-28
+
+### Added
+
+- Configurable token embedding layer (`model.OdysseyEmbedding`)
+- Embedding config (`configs/embedding.yaml`, `model.config.EmbeddingConfig`)
+- Weight initialization: Normal, Xavier, Kaiming (`model.initialization`)
+- Embedding inspector + visualizer (`model.embedding_visualizer`)
+- Shape / init / embedding unit tests + tokenizer→embedding integration
+- Benchmark script `scripts/benchmark_embeddings.py`
+- Architecture doc `docs/architecture/embeddings.md`
+- Math notes directory (`math/`) with embeddings + foundation notes and outlines for later phases
+- Paper summaries: Transformer embeddings, Word2Vec, GloVe
+- Experiment `ODY-0003`
+
+### Notes
+
+- Weight tying documented but not implemented (future phase)
+- Ready for Phase 4 RoPE — do not start without approval
+
+---
+
 ## [0.2.0] — 2026-07-28
 
 ### Added

@@ -61,3 +61,23 @@ Details: [experiments/ODY-0001/README.md](experiments/ODY-0001/README.md)
 | Lessons | Owning merges + vocab artifacts is the right boundary for Phalanx; pure-Python encode is the next optimization target (Rust). |
 
 Details: [experiments/ODY-0002/README.md](experiments/ODY-0002/README.md)
+
+---
+
+## ODY-0003 — Token embedding layer
+
+| Field | Value |
+| --- | --- |
+| ID | ODY-0003 |
+| Date | 2026-07-28 |
+| Phase | 3 |
+| Purpose | Implement configurable token embedding layer |
+| Config | `configs/embedding.yaml` (snapshot in experiment folder) |
+| Vocabulary | 32000 |
+| Hidden size | 768 |
+| Initialization | Xavier uniform |
+| Result | **Successful** |
+| Metrics | See experiment `metrics.json` (lookup speed, memory, param count) |
+| Lessons | Embedding is a gather not a matmul; `math/` notes should ship with each neural phase; weight tying deferred |
+
+Details: [experiments/ODY-0003/README.md](experiments/ODY-0003/README.md)

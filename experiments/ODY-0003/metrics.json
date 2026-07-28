@@ -1,0 +1,20 @@
+{
+  "vocab_size": 32000,
+  "hidden_size": 768,
+  "batch": 8,
+  "sequence": 128,
+  "device": "cpu",
+  "init_strategy": "xavier_uniform",
+  "init_seconds": 0.436842,
+  "lookup_mean_seconds": 0.00013248,
+  "lookup_tokens_per_second": 7729517.64,
+  "parameter_count": 24576000,
+  "weight_memory_bytes": 98304000,
+  "tracemalloc_peak_bytes": 808,
+  "cuda_available": false,
+  "output_shape": [
+    8,
+    128,
+    768
+  ]
+}

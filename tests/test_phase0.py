@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_version() -> None:
-    assert __version__ == "0.2.0"
+    assert __version__ == "0.3.0"
 
 
 def test_package_imports() -> None:
@@ -43,7 +43,8 @@ def test_config_loads() -> None:
     assert config["tokenizer"]["path"] == "assets/tokenizer/bpe/odyssey.model"
     assert config["tokenizer"]["type"] == "bpe"
     assert config["tokenizer"]["config"] == "configs/tokenizer.yaml"
-    assert config["experiment"]["id"] == "ODY-0002"
+    assert config["experiment"]["id"] == "ODY-0003"
+    assert config["model"]["embedding"]["init_strategy"] == "xavier_uniform"
 
 
 def test_config_yaml_parses_directly() -> None:
@@ -65,6 +66,7 @@ def test_required_directories_exist() -> None:
         "papers",
         "experiments",
         "model",
+        "math",
         "tokenizer",
         "training",
         "evaluation",
@@ -99,6 +101,13 @@ def test_required_docs_exist() -> None:
         "papers/bpe.md",
         "papers/gpt2-tokenizer.md",
         "papers/tiktoken.md",
+        "papers/transformer_embeddings.md",
+        "papers/word2vec.md",
+        "papers/glove.md",
+        "docs/architecture/embeddings.md",
+        "math/README.md",
+        "math/embeddings.md",
+        "configs/embedding.yaml",
         "tokenizer/README.md",
         "tokenizer/docs/bpe.md",
     ]

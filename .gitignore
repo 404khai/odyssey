@@ -58,6 +58,7 @@ temp/
 *.log
 outputs/
 multirun/
+.mplconfig/
 
 # IDE / OS
 .idea/

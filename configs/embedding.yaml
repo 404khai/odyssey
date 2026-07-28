@@ -1,0 +1,10 @@
+# Odyssey embedding layer configuration (Phase 3)
+
+embedding:
+  vocab_size: 32000
+  hidden_size: 768
+  padding_idx: 0
+  init_strategy: xavier_uniform   # normal | xavier_uniform | xavier_normal | kaiming_uniform | kaiming_normal
+  init_std: 0.02                  # used when init_strategy == normal
+  device: cpu
+  dtype: float32

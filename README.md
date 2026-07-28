@@ -6,7 +6,7 @@
 
 ---
 
-**Status:** Research Project — Phase 2 complete  
+**Status:** Research Project — Phase 3 complete  
 **Language:** Python 3.12+  
 **Framework:** PyTorch  
 **Target Runtime:** [Phalanx Runtime](https://github.com/404khai/phalanx)  
@@ -23,20 +23,44 @@ Odyssey is a research repository for building a small, carefully engineered deco
 | 0 | Research repository foundation |
 | 1 | SentencePiece **reference** tokenizer |
 | 2 | **Owned** byte-level BPE library (`odyssey_tokenizer`) |
+| 3 | **Token embedding layer** (`OdysseyEmbedding`) |
 
 ```mermaid
 flowchart TD
-    RawCorpus --> Normalize
-    Normalize --> SplitIntoBytes
-    SplitIntoBytes --> BuildInitialVocabulary
-    BuildInitialVocabulary --> CountPairFrequencies
-    CountPairFrequencies --> SelectMostFrequentPair
-    SelectMostFrequentPair --> MergePair
-    MergePair --> UpdateVocabulary
-    UpdateVocabulary -->|repeat| CountPairFrequencies
-    UpdateVocabulary --> ExportVocabulary
-    ExportVocabulary --> Encoder
-    Encoder --> TokenIDs
+    RawText[Raw Text] --> Tokenizer
+    Tokenizer --> TokenIDs[Token IDs]
+    TokenIDs --> EmbeddingLookup[Embedding Lookup]
+    EmbeddingMatrix[Embedding Matrix] --> EmbeddingLookup
+    EmbeddingLookup --> Vectors[Embedding Vectors]
+    Vectors --> RoPE[RoPE Phase 4]
+    RoPE --> TransformerBlock[Transformer Block]
+```
+
+---
+
+## Embedding Layer (Phase 3)
+
+```python
+from model import EmbeddingConfig, OdysseyEmbedding, load_embedding_config
+
+config = load_embedding_config()  # configs/embedding.yaml
+emb = OdysseyEmbedding(config)
+x = emb(token_ids)  # (batch, seq) → (batch, seq, hidden)
+print(emb.inspect().format())
+```
+
+| Knob | Default |
+| --- | --- |
+| Vocabulary | 32,000 |
+| Hidden size | 768 |
+| Parameters | 24,576,000 |
+| Init | Xavier uniform |
+| Memory (fp32) | ~93.75 MiB |
+
+Math notes: [`math/embeddings.md`](math/embeddings.md) · Architecture: [`docs/architecture/embeddings.md`](docs/architecture/embeddings.md)
+
+```bash
+python scripts/benchmark_embeddings.py --visualize
 ```
 
 ---
@@ -90,34 +114,13 @@ odyssey-tokenizer benchmark --model assets/tokenizer/bpe/odyssey.model --input d
 odyssey-tokenizer visualize --model assets/tokenizer/bpe/odyssey.model --input datasets/raw/sample.txt
 ```
 
-### Merge Algorithm
-
-Greedy byte-pair merges with deterministic tie-breaking. Details:
-[tokenizer/docs/merge_algorithm.md](tokenizer/docs/merge_algorithm.md)
-
-### Benchmarks (ODY-0002)
-
-| Metric | Value (2048 vocab / 1000 TinyStories lines) |
-| --- | --- |
-| Compression | ~4.16 chars/token (~76% reduction) |
-| Unknown rate | 0.0 |
-| Train time | ~157 s |
-| Encode / decode | ~1e3 tok/s encode · ~6e6 tok/s decode |
-
-### Comparison
-
-| | Odyssey BPE | SentencePiece (Phase 1) | GPT-2 BPE |
-| --- | --- | --- | --- |
-| Ownership | First-party | Third-party C++ | Third-party reference |
-| Alphabet | Bytes | Unigram pieces | Bytes + unicode map |
-| Runtime dependency | None (Python) | `sentencepiece` | `tiktoken` / HF |
-| Phalanx path | Direct / Rust port | Not required | Study only |
-
-### Future Rust Port
-
-Phalanx Runtime should eventually load the same `merges.txt` / `vocab.json` (or a mirrored binary) so train/serve tokenization never drifts.
-
 Docs: [tokenizer/README.md](tokenizer/README.md)
+
+---
+
+## Math Notes
+
+Equation-level companions for each neural component live in [`math/`](math/README.md) (embeddings, RoPE outline, attention outline, …), including PyTorch vs Phalanx Runtime execution notes.
 
 ---
 
@@ -166,7 +169,7 @@ MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 | 0 | Repository setup | **Complete** |
 | 1 | SentencePiece reference | **Complete** |
 | 2 | Odyssey BPE library | **Complete** |
-| 3 | Embedding layer | Next |
+| 3 | Embedding layer | **Complete** |
 | 4–20 | RoPE → Odyssey v1 | Planned |
 
 ---
@@ -178,6 +181,7 @@ MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 | ODY-0000 | Repository initialization | Successful |
 | ODY-0001 | SentencePiece baseline | Successful |
 | ODY-0002 | Odyssey BPE tokenizer | Successful |
+| ODY-0003 | Token embedding layer | Successful |
 
 ---
 

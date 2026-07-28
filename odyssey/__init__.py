@@ -1,7 +1,7 @@
 """Odyssey research package.
 
-Phase 0 establishes repository infrastructure only.
-Model implementation begins in later phases.
+Phase 3 delivers the token embedding layer. Later phases add RoPE,
+normalization, attention, and the full decoder stack.
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"

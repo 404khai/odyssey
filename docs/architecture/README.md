@@ -1,5 +1,12 @@
 # Architecture Documentation
 
-Architecture notes for Odyssey's decoder-only transformer will live here.
+Notes for Odyssey's decoder-only transformer.
 
-Phase 0 has no model implementation yet. See the repository README for the high-level vision diagram.
+| Doc | Phase | Status |
+| --- | --- | --- |
+| [embeddings.md](embeddings.md) | 3 | Complete |
+| RoPE | 4 | Planned |
+| RMSNorm | 5 | Planned |
+| Attention | 6 | Planned |
+
+Equation-level details live under [`math/`](../../math/README.md).

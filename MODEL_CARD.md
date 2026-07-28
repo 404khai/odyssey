@@ -9,12 +9,13 @@
 | Field | Value |
 | --- | --- |
 | Model name | Odyssey |
-| Version | v0.0.0 (repository only) |
-| Architecture | Decoder-only Transformer *(planned)* |
-| Parameters | TBD |
+| Version | v0.3.0 (embedding layer) |
+| Architecture | Decoder-only Transformer *(embeddings complete; blocks planned)* |
+| Parameters | Embedding table 24,576,000 at 32k×768 (full model TBD) |
 | Context length | TBD (config default: 2048) |
-| Vocabulary size | TBD (config default: 32000) |
+| Vocabulary size | 32000 (config default) |
 | Tokenizer | Odyssey byte-level BPE (`odyssey_tokenizer`); SentencePiece reference retained |
+| Embeddings | `OdysseyEmbedding` — Xavier uniform init; see `math/embeddings.md` |
 | License | MIT |
 | Developers | Odyssey Contributors |
 | Languages | English *(planned)* |

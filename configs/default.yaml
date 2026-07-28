@@ -2,8 +2,8 @@
 # All hyperparameters should eventually flow from config files.
 
 experiment:
-  id: ODY-0002
-  name: odyssey-bpe-baseline
+  id: ODY-0003
+  name: odyssey-embedding-baseline
   seed: 42
 
 model:
@@ -14,6 +14,12 @@ model:
   num_layers: 12
   num_heads: 12
   intermediate_size: 2048
+  embedding:
+    padding_idx: 0
+    init_strategy: xavier_uniform
+    init_std: 0.02
+    device: cpu
+    dtype: float32
 
 tokenizer:
   path: assets/tokenizer/bpe/odyssey.model

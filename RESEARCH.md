@@ -21,7 +21,7 @@ Living document for Odyssey research questions, hypotheses, and findings.
 
 Investigate embeddings, positional encoding, attention, normalization, feed-forward layers, and decoding without opaque abstractions.
 
-**Status:** Not started (Phases 3–9)
+**Status:** In progress (Phase 3 embeddings complete; Phases 4–9 remain)
 
 ### RQ2 — How do reasoning models differ from code-completion models?
 
@@ -62,6 +62,14 @@ Build evaluations that capture planning quality, architectural judgment, and fai
 - Pure-Python greedy encoding is correct but far slower than SentencePiece — Rust port is the performance path, not a redesign.
 - Hex-encoded `merges.txt` avoids delimiter bugs with whitespace bytes.
 
+## Phase 3 Findings
+
+- Token embedding is a row gather from \(E \in \mathbb{R}^{V \times D}\); shape contract `(B,S)→(B,S,D)` is now enforced in code.
+- Xavier uniform is a sensible default; Normal(σ=0.02) remains available for GPT-style ablations.
+- At 32k×768 fp32 the table alone is ~94 MiB / 24.6M params — memory planning matters before stacking layers.
+- Adding `math/` alongside `model/` keeps equations, complexity, and PyTorch↔Phalanx notes next to each phase.
+- Weight tying is documented only; implement with the LM head later.
+
 ---
 
 ## Open Decisions
@@ -74,3 +82,5 @@ Build evaluations that capture planning quality, architectural judgment, and fai
 | Final tokenizer alphabet | Bytes (current) vs GPT-2 unicode map | Bytes for now |
 | Production vocab size | 32k target vs corpus-driven size | Open |
 | Serving tokenizer | Python lib vs Rust port | Rust planned |
+| Embedding init | Xavier uniform (default) vs Normal(0.02) | Xavier for now |
+| Weight tying | Tie input E with LM head | Planned (later phase) |
