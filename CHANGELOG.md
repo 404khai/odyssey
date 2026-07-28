@@ -7,6 +7,15 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- Odyssey Specification **v1.0.0** under `spec/` (architecture, shapes, weights, GGUF mapping, tokenizer, runtime contract)
+- Cross-links from README / math / docs to the normative Spec
+
+---
+
 ## [0.3.0] — 2026-07-28
 
 ### Added

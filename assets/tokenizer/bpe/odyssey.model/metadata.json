@@ -34,20 +34,20 @@
     ],
     "training": {
       "input_sentence_size": 0,
-      "max_lines": 1000,
+      "max_lines": 3000,
       "progress_every": 500,
       "seed": 42,
       "shuffle_input_sentence": true
     },
     "unk_id": 3,
-    "vocab_size": 2048
+    "vocab_size": 4096
   },
-  "corpus_bytes": 937709,
-  "corpus_lines": 1000,
+  "corpus_bytes": 2598224,
+  "corpus_lines": 3000,
   "experiment": "ODY-0002",
   "format": "odyssey-bpe",
-  "merge_count": 1782,
-  "training_seconds": 156.57788895900012,
+  "merge_count": 3830,
+  "training_seconds": 1473.3671964170062,
   "version": 1,
-  "vocab_size": 2048
+  "vocab_size": 4096
 }

@@ -2,6 +2,8 @@
 
 Notes for Odyssey's decoder-only transformer.
 
+**Normative specification:** [`../../spec/`](../../spec/README.md) (**v1.0.0**).
+
 | Doc | Phase | Status |
 | --- | --- | --- |
 | [embeddings.md](embeddings.md) | 3 | Complete |
@@ -9,4 +11,4 @@ Notes for Odyssey's decoder-only transformer.
 | RMSNorm | 5 | Planned |
 | Attention | 6 | Planned |
 
-Equation-level details live under [`math/`](../../math/README.md).
+Equation-level pedagogy: [`math/`](../../math/README.md) (non-normative).

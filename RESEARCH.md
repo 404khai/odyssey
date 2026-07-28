@@ -70,6 +70,12 @@ Build evaluations that capture planning quality, architectural judgment, and fai
 - Adding `math/` alongside `model/` keeps equations, complexity, and PyTorch↔Phalanx notes next to each phase.
 - Weight tying is documented only; implement with the LM head later.
 
+## Spec v1.0.0
+
+- Odyssey Specification frozen under `spec/` — single source of truth for train/serve.
+- Weight names, residual order (pre-norm), SwiGLU, RMSNorm, RoPE, and GGUF bijection are locked.
+- Phalanx Runtime declares support for Spec `1.0.0` with partial layer coverage (embedding + RoPE).
+
 ---
 
 ## Open Decisions
@@ -84,3 +90,4 @@ Build evaluations that capture planning quality, architectural judgment, and fai
 | Serving tokenizer | Python lib vs Rust port | Rust planned |
 | Embedding init | Xavier uniform (default) vs Normal(0.02) | Xavier for now |
 | Weight tying | Tie input E with LM head | Planned (later phase) |
+| GGUF `general.architecture` | `llama` for tooling vs native `odyssey` | `llama` layout for Spec v1 export |
