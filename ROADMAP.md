@@ -23,11 +23,12 @@ Development proceeds **one phase at a time**. Complete, document, commit, then w
 
 ---
 
-## Phase 2 — Custom Tokenizer
+## Phase 2 — Custom Tokenizer *(complete)*
 
-- BPE training
-- Vocabulary trainer
-- Tokenizer evaluation
+- Byte-level BPE from first principles
+- Reusable `odyssey_tokenizer` library + CLI
+- Serialization, inspector, benchmarks, visualizations
+- ODY-0002 baseline
 
 ---
 

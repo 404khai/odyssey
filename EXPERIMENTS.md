@@ -41,3 +41,23 @@ Details: [experiments/ODY-0000/README.md](experiments/ODY-0000/README.md)
 | Lessons | Corpus diversity bounds achievable vocabulary size; soft vocab limits are required for homogeneous research samples. |
 
 Details: [experiments/ODY-0001/README.md](experiments/ODY-0001/README.md)
+
+---
+
+## ODY-0002 — Odyssey BPE tokenizer
+
+| Field | Value |
+| --- | --- |
+| ID | ODY-0002 |
+| Date | 2026-07-28 |
+| Phase | 2 |
+| Purpose | Implement Odyssey byte-level BPE from first principles |
+| Config | `configs/tokenizer.yaml` (experiment used vocab=2048, max_lines=1000) |
+| Dataset | TinyStories sample |
+| Algorithm | Byte-level BPE |
+| Actual vocab | 2048 |
+| Result | **Successful** |
+| Metrics | ~4.16 chars/token; unk=0; train ~157s; library API stable |
+| Lessons | Owning merges + vocab artifacts is the right boundary for Phalanx; pure-Python encode is the next optimization target (Rust). |
+
+Details: [experiments/ODY-0002/README.md](experiments/ODY-0002/README.md)

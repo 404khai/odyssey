@@ -88,6 +88,21 @@ def build_special_tokens(config: TokenizerConfig) -> list[SpecialToken]:
             usage="Wrapped around assistant responses during formatting.",
         ),
     ]
+    for name in ("tool", "think"):
+        if name in config.special_tokens:
+            extras.append(
+                SpecialToken(
+                    name=name,
+                    surface=config.special_tokens[name],
+                    token_id=-1,
+                    purpose=(
+                        "Tool / function-call turn delimiter."
+                        if name == "tool"
+                        else "Explicit reasoning / scratchpad segment delimiter."
+                    ),
+                    usage="Inserted by chat / agent templates when needed.",
+                )
+            )
     return [*core, *extras]
 
 

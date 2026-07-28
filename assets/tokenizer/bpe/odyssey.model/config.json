@@ -1,0 +1,43 @@
+{
+  "algorithm": "bpe",
+  "bos_id": 1,
+  "byte_level": true,
+  "eos_id": 2,
+  "lowercase": false,
+  "min_frequency": 2,
+  "normalization": {
+    "collapse_whitespace": true,
+    "form": "NFKC",
+    "preserve_newlines": true,
+    "strip": true
+  },
+  "pad_id": 0,
+  "paths": {
+    "merges_file": "assets/tokenizer/bpe/odyssey.model/merges.txt",
+    "metadata_file": "assets/tokenizer/bpe/odyssey.model/metadata.json",
+    "model_dir": "assets/tokenizer/bpe/odyssey.model",
+    "visualization_dir": "assets/tokenizer/bpe",
+    "vocab_file": "assets/tokenizer/bpe/odyssey.model/vocab.json"
+  },
+  "special_tokens": [
+    "<pad>",
+    "<bos>",
+    "<eos>",
+    "<unk>",
+    "<mask>",
+    "<system>",
+    "<user>",
+    "<assistant>",
+    "<tool>",
+    "<think>"
+  ],
+  "training": {
+    "input_sentence_size": 0,
+    "max_lines": 1000,
+    "progress_every": 500,
+    "seed": 42,
+    "shuffle_input_sentence": true
+  },
+  "unk_id": 3,
+  "vocab_size": 2048
+}

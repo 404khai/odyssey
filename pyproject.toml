@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "odyssey"
-version = "0.1.0"
+version = "0.2.0"
 description = "A decoder-only transformer specializing in long-horizon reasoning and software architecture."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.12"
 authors = [{ name = "Odyssey Contributors" }]
-keywords = ["transformer", "llm", "reasoning", "pytorch", "research"]
+keywords = ["transformer", "llm", "reasoning", "pytorch", "research", "tokenizer", "bpe"]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Science/Research",
@@ -46,8 +46,25 @@ all = [
     "odyssey[dev,tracking]",
 ]
 
-[tool.setuptools.packages.find]
-include = ["model*", "tokenizer*", "training*", "evaluation*", "odyssey*"]
+[project.scripts]
+odyssey-tokenizer = "tokenizer.cli.main:main"
+
+[tool.setuptools]
+packages = [
+    "odyssey",
+    "model",
+    "training",
+    "evaluation",
+    "tokenizer",
+    "tokenizer.sentencepiece",
+    "tokenizer.cli",
+    "tokenizer.benchmarks",
+    "odyssey_tokenizer",
+]
+
+[tool.setuptools.package-dir]
+"" = "."
+"odyssey_tokenizer" = "tokenizer/odyssey_tokenizer"
 
 [tool.black]
 line-length = 88
@@ -57,7 +74,14 @@ include = '\.pyi?$'
 [tool.isort]
 profile = "black"
 line_length = 88
-known_first_party = ["model", "tokenizer", "training", "evaluation", "odyssey"]
+known_first_party = [
+    "model",
+    "tokenizer",
+    "training",
+    "evaluation",
+    "odyssey",
+    "odyssey_tokenizer",
+]
 src_paths = ["."]
 
 [tool.ruff]
@@ -67,15 +91,14 @@ src = ["."]
 
 [tool.ruff.lint]
 select = [
-    "E",   # pycodestyle errors
-    "F",   # pyflakes
-    "I",   # isort
-    "B",   # bugbear
-    "UP",  # pyupgrade
-    "W",   # pycodestyle warnings
+    "E",
+    "F",
+    "B",
+    "UP",
+    "W",
 ]
 ignore = [
-    "E501",  # line length handled by black
+    "E501",
 ]
 
 [tool.mypy]
@@ -86,8 +109,9 @@ disallow_untyped_defs = true
 check_untyped_defs = true
 ignore_missing_imports = true
 packages = ["model", "tokenizer", "training", "evaluation", "odyssey"]
+exclude = "(?x)(^tokenizer/odyssey_tokenizer/)"
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "tokenizer/tests"]
 pythonpath = ["."]
 addopts = "-ra"

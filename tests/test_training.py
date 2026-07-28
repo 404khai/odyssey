@@ -9,7 +9,9 @@ from tokenizer.sentencepiece.tokenizer import OdysseySentencePieceTokenizer
 
 
 def test_load_tokenizer_config(repo_root: Path) -> None:
-    config = load_tokenizer_config(repo_root / "configs" / "tokenizer.yaml")
+    config = load_tokenizer_config(
+        repo_root / "configs" / "tokenizer_sentencepiece.yaml"
+    )
     assert config.vocab_size == 32000
     assert config.model_type == "unigram"
     assert config.character_coverage == 0.9995

@@ -1,0 +1,36 @@
+Input
+Build authentication API
+
+Normalized
+Build authentication API
+
+Tokens
+B u il d  a u th ent ic ati on  A P I
+
+IDs
+[76, 127, 307, 267, 107, 127, 268, 489, 491, 1259, 468, 75, 90, 83]
+
+Decoded Text
+Build authentication API
+
+Compression
+Characters 24
+Tokens 14
+Ratio 1.714 chars/token
+Reduction 41.7%
+
+Special Tokens
+==============
+
+ID   Surface        Purpose
+------------------------------------------------------------------------
+0    <pad>          Padding sequences in batched training.
+1    <bos>          Beginning-of-sequence marker.
+2    <eos>          End-of-sequence / generation stop marker.
+3    <unk>          Fallback for bytes outside the trained vocabulary (rare with byte-level BPE).
+4    <mask>         Reserved for masking / span corruption experiments.
+5    <system>       Chat system / policy turn delimiter.
+6    <user>         Chat user turn delimiter.
+7    <assistant>    Chat assistant turn delimiter.
+8    <tool>         Tool / function-call turn delimiter.
+9    <think>        Explicit reasoning / scratchpad segment delimiter.

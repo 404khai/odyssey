@@ -15,7 +15,7 @@ import yaml
 
 from odyssey.config import REPO_ROOT
 
-DEFAULT_TOKENIZER_CONFIG_PATH = REPO_ROOT / "configs" / "tokenizer.yaml"
+DEFAULT_TOKENIZER_CONFIG_PATH = REPO_ROOT / "configs" / "tokenizer_sentencepiece.yaml"
 
 
 @dataclass(slots=True)
@@ -55,7 +55,14 @@ class TokenizerConfig:
     eos_id: int = 2
     unk_id: int = 3
     user_defined_symbols: list[str] = field(
-        default_factory=lambda: ["<mask>", "<system>", "<user>", "<assistant>"]
+        default_factory=lambda: [
+            "<mask>",
+            "<system>",
+            "<user>",
+            "<assistant>",
+            "<tool>",
+            "<think>",
+        ]
     )
     normalization: NormalizationConfig = field(default_factory=NormalizationConfig)
     training: TrainingConfig = field(default_factory=TrainingConfig)
@@ -70,6 +77,8 @@ class TokenizerConfig:
             "system": "<system>",
             "user": "<user>",
             "assistant": "<assistant>",
+            "tool": "<tool>",
+            "think": "<think>",
         }
     )
 
@@ -202,6 +211,8 @@ def load_tokenizer_config(path: Path | str | None = None) -> TokenizerConfig:
             "system": str(special_raw.get("system", "<system>")),
             "user": str(special_raw.get("user", "<user>")),
             "assistant": str(special_raw.get("assistant", "<assistant>")),
+            "tool": str(special_raw.get("tool", "<tool>")),
+            "think": str(special_raw.get("think", "<think>")),
         },
     )
 

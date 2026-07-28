@@ -2,8 +2,8 @@
 # All hyperparameters should eventually flow from config files.
 
 experiment:
-  id: ODY-0001
-  name: sentencepiece-baseline
+  id: ODY-0002
+  name: odyssey-bpe-baseline
   seed: 42
 
 model:
@@ -16,8 +16,8 @@ model:
   intermediate_size: 2048
 
 tokenizer:
-  path: assets/tokenizer/odyssey.model
-  type: sentencepiece
+  path: assets/tokenizer/bpe/odyssey.model
+  type: bpe
   config: configs/tokenizer.yaml
 
 training:
