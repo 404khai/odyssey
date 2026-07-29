@@ -2,8 +2,8 @@
 # All hyperparameters should eventually flow from config files.
 
 experiment:
-  id: ODY-0005
-  name: odyssey-rmsnorm-baseline
+  id: ODY-0006
+  name: odyssey-swiglu-baseline
   seed: 42
 
 model:
@@ -31,6 +31,13 @@ model:
   norm:
     type: rmsnorm
     epsilon: 0.000001
+    device: cpu
+    dtype: float32
+  feed_forward:
+    type: swiglu
+    hidden_size: 768
+    intermediate_size: 2048
+    activation: silu
     device: cpu
     dtype: float32
 

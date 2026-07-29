@@ -6,7 +6,7 @@
 
 ---
 
-**Status:** Research Project — Phase 5 complete · **Spec v1.0.0** frozen  
+**Status:** Research Project — Phase 6 complete · **Spec v1.0.0** frozen  
 **Language:** Python 3.12+  
 **Framework:** PyTorch  
 **Target Runtime:** [Phalanx Runtime](https://github.com/404khai/phalanx)  
@@ -36,6 +36,7 @@ Odyssey is a research repository for building a small, carefully engineered deco
 | 3 | **Token embedding layer** (`OdysseyEmbedding`) |
 | 4 | **RoPE** (`OdysseyRoPE`) + Phalanx numerical validation |
 | 5 | **RMSNorm** + pre-norm residuals + Phalanx validation |
+| 6 | **SwiGLU** (`OdysseySwiGLU`) + Phalanx validation |
 
 ```mermaid
 flowchart TD
@@ -46,8 +47,27 @@ flowchart TD
     EmbeddingLookup --> Vectors[Embedding Vectors]
     Vectors --> RoPE[RoPE]
     RoPE --> RMSNorm[RMSNorm]
-    RMSNorm --> TransformerBlock[Transformer Block]
+    RMSNorm --> SwiGLU[SwiGLU]
+    SwiGLU --> TransformerBlock[Transformer Block]
 ```
+
+---
+
+## SwiGLU Feed-Forward (Phase 6)
+
+```python
+from model import OdysseySwiGLU, load_feed_forward_config
+ffn = OdysseySwiGLU(load_feed_forward_config())
+y = ffn(x)  # (B, S, D) → (B, S, D)
+```
+
+Cross-check against Phalanx Runtime:
+
+```bash
+python scripts/validate_swiglu.py
+```
+
+Docs: [`docs/architecture/swiglu.md`](docs/architecture/swiglu.md) · Spec: [`spec/feedforward.md`](spec/feedforward.md)
 
 ---
 
@@ -226,7 +246,8 @@ MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 | 3 | Embedding layer | **Complete** |
 | 4 | RoPE (+ Phalanx validation) | **Complete** |
 | 5 | RMSNorm + residuals (+ Phalanx validation) | **Complete** |
-| 6–20 | Attention → Odyssey v1 | Planned |
+| 6 | SwiGLU FFN (+ Phalanx validation) | **Complete** |
+| 7–20 | Attention → Odyssey v1 | Planned |
 
 ---
 
@@ -240,6 +261,7 @@ MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 | ODY-0003 | Token embedding layer | Successful |
 | ODY-0004 | RoPE + Phalanx parity | Successful |
 | ODY-0005 | RMSNorm + Phalanx parity | Successful |
+| ODY-0006 | SwiGLU + Phalanx parity | Successful |
 
 ---
 

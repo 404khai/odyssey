@@ -10,6 +10,7 @@ Notes for Odyssey's decoder-only transformer.
 | [rope.md](rope.md) | 4 | Complete |
 | [rmsnorm.md](rmsnorm.md) | 5 | Complete |
 | [residuals.md](residuals.md) | 5 | Complete |
-| Attention | 6 | Planned |
+| [swiglu.md](swiglu.md) / [feedforward.md](feedforward.md) | 6 | Complete |
+| Attention | 7 | Planned |
 
 Equation-level pedagogy: [`math/`](../../math/README.md) (non-normative).

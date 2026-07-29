@@ -117,3 +117,21 @@ Details: [experiments/ODY-0004/README.md](experiments/ODY-0004/README.md)
 | Lessons | Float32 sum-of-squares + identical ε/γ keep train/serve aligned; shared suite under `../validation/` |
 
 Details: [experiments/ODY-0005/README.md](experiments/ODY-0005/README.md)
+
+
+---
+
+## ODY-0006 — SwiGLU Feed-Forward
+
+| Field | Value |
+| --- | --- |
+| ID | ODY-0006 |
+| Date | 2026-07-29 |
+| Phase | 6 |
+| Purpose | LLaMA-style SwiGLU + Phalanx numerical parity |
+| Config | `configs/model.yaml` / experiment `config.yaml` |
+| Result | **Successful** |
+| Validation | See `swiglu_validation.json` (PASS @ 1e-3 GEMM tol) |
+| Lessons | Float64 GEMM accum + documented SwiGLU abs tol keep train/serve aligned |
+
+Details: [experiments/ODY-0006/README.md](experiments/ODY-0006/README.md)

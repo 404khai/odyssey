@@ -61,11 +61,19 @@ Math companions: [math/rmsnorm.md](math/rmsnorm.md), [math/residuals.md](math/re
 
 ---
 
+## Phase 6 — SwiGLU *(complete)*
+
+| Paper / Study | Summary |
+| --- | --- |
+| GLU Variants (Shazeer) | [papers/swiglu.md](papers/swiglu.md) |
+| LLaMA FFN notes | [papers/llama_ffn.md](papers/llama_ffn.md) |
+
+---
+
 ## Planned Reading (later phases)
 
 | Topic | Canonical paper / resource | Phase |
 | --- | --- | --- |
 | Attention | *Attention Is All You Need* (Vaswani et al., 2017) | 6+ |
-| SwiGLU | *GLU Variants Improve Transformer* (Shazeer) | 7 |
 | GPT-style LMs | GPT / Llama technical reports | 9–10 |
 | DPO | *Direct Preference Optimization* (Rafailov et al.) | 14 |
