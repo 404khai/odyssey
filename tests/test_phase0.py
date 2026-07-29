@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_version() -> None:
-    assert __version__ == "0.3.0"
+    assert __version__ == "0.4.0"
 
 
 def test_package_imports() -> None:
@@ -43,8 +43,9 @@ def test_config_loads() -> None:
     assert config["tokenizer"]["path"] == "assets/tokenizer/bpe/odyssey.model"
     assert config["tokenizer"]["type"] == "bpe"
     assert config["tokenizer"]["config"] == "configs/tokenizer.yaml"
-    assert config["experiment"]["id"] == "ODY-0003"
+    assert config["experiment"]["id"] == "ODY-0004"
     assert config["model"]["embedding"]["init_strategy"] == "xavier_uniform"
+    assert config["model"]["rope"]["theta"] == 10000.0
 
 
 def test_config_yaml_parses_directly() -> None:
@@ -115,6 +116,10 @@ def test_required_docs_exist() -> None:
         "spec/gguf_mapping.md",
         "spec/runtime_contract.md",
         "configs/embedding.yaml",
+        "configs/model.yaml",
+        "docs/architecture/rope.md",
+        "papers/roformer.md",
+        "scripts/validate_rope.py",
         "tokenizer/README.md",
         "tokenizer/docs/bpe.md",
     ]

@@ -2,8 +2,8 @@
 # All hyperparameters should eventually flow from config files.
 
 experiment:
-  id: ODY-0003
-  name: odyssey-embedding-baseline
+  id: ODY-0004
+  name: odyssey-rope-baseline
   seed: 42
 
 model:
@@ -18,6 +18,14 @@ model:
     padding_idx: 0
     init_strategy: xavier_uniform
     init_std: 0.02
+    device: cpu
+    dtype: float32
+  rope:
+    theta: 10000.0
+    rotary_dim: 64
+    max_position_embeddings: 2048
+    scaling: none
+    scaling_factor: 1.0
     device: cpu
     dtype: float32
 

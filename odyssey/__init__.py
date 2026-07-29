@@ -1,7 +1,6 @@
 """Odyssey research package.
 
-Phase 3 delivers the token embedding layer. Later phases add RoPE,
-normalization, attention, and the full decoder stack.
+Phase 4 delivers LLaMA-style RoPE with Phalanx numerical parity.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"

@@ -1,0 +1,11 @@
+rope:
+  theta: 10000.0
+  head_dim: 128
+  rotary_dim: 128
+  max_position_embeddings: 4096
+  scaling: none
+  scaling_factor: 1.0
+
+experiment:
+  id: ODY-0004
+  seed: 0

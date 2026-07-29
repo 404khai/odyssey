@@ -6,7 +6,7 @@
 
 ---
 
-**Status:** Research Project — Phase 3 complete · **Spec v1.0.0** frozen  
+**Status:** Research Project — Phase 4 complete · **Spec v1.0.0** frozen  
 **Language:** Python 3.12+  
 **Framework:** PyTorch  
 **Target Runtime:** [Phalanx Runtime](https://github.com/404khai/phalanx)  
@@ -34,6 +34,7 @@ Odyssey is a research repository for building a small, carefully engineered deco
 | 1 | SentencePiece **reference** tokenizer |
 | 2 | **Owned** byte-level BPE library (`odyssey_tokenizer`) |
 | 3 | **Token embedding layer** (`OdysseyEmbedding`) |
+| 4 | **RoPE** (`OdysseyRoPE`) + Phalanx numerical validation |
 
 ```mermaid
 flowchart TD
@@ -42,9 +43,29 @@ flowchart TD
     TokenIDs --> EmbeddingLookup[Embedding Lookup]
     EmbeddingMatrix[Embedding Matrix] --> EmbeddingLookup
     EmbeddingLookup --> Vectors[Embedding Vectors]
-    Vectors --> RoPE[RoPE Phase 4]
+    Vectors --> RoPE[RoPE]
     RoPE --> TransformerBlock[Transformer Block]
 ```
+
+---
+
+## Rotary Positional Embeddings (Phase 4)
+
+```python
+from model import OdysseyRoPE, load_rope_config
+
+rope = OdysseyRoPE(load_rope_config())
+q_rot, k_rot = rope.apply_rotary(q, k, position_offset=0)
+```
+
+Cross-check against Phalanx Runtime (must PASS):
+
+```bash
+python scripts/validate_rope.py
+# Max Error ~5e-7  →  PASS
+```
+
+Docs: [`docs/architecture/rope.md`](docs/architecture/rope.md) · Spec: [`spec/rope.md`](spec/rope.md)
 
 ---
 
@@ -180,7 +201,8 @@ MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 | 1 | SentencePiece reference | **Complete** |
 | 2 | Odyssey BPE library | **Complete** |
 | 3 | Embedding layer | **Complete** |
-| 4–20 | RoPE → Odyssey v1 | Planned |
+| 4 | RoPE (+ Phalanx validation) | **Complete** |
+| 5–20 | RMSNorm → Odyssey v1 | Planned |
 
 ---
 
@@ -192,6 +214,7 @@ MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 | ODY-0001 | SentencePiece baseline | Successful |
 | ODY-0002 | Odyssey BPE tokenizer | Successful |
 | ODY-0003 | Token embedding layer | Successful |
+| ODY-0004 | RoPE + Phalanx parity | Successful |
 
 ---
 

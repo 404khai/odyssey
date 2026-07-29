@@ -1,0 +1,38 @@
+{
+  "component": "RoPE",
+  "odyssey_spec": "1.0.0",
+  "manifest": {
+    "shape": [
+      16,
+      4,
+      128
+    ],
+    "head_dim": 128,
+    "rotary_dim": 128,
+    "theta": 10000.0,
+    "scale": 1.0,
+    "max_position": 4096,
+    "position_offset": 3,
+    "seed": 0
+  },
+  "q": {
+    "max_error": 4.76837158203125e-07,
+    "mean_error": 5.68458347061096e-09,
+    "tolerance": 1e-06,
+    "pass": true,
+    "status": "PASS"
+  },
+  "k": {
+    "max_error": 4.76837158203125e-07,
+    "mean_error": 5.555648385779932e-09,
+    "tolerance": 1e-06,
+    "pass": true,
+    "status": "PASS"
+  },
+  "max_error": 4.76837158203125e-07,
+  "mean_error": 5.620115928195446e-09,
+  "tolerance": 1e-06,
+  "status": "PASS",
+  "work_dir": "/var/folders/c0/32vfjvv9233c0nmghgqt_mp40000gn/T/rope_val__zmqwoye",
+  "message": "Odyssey and Phalanx are mathematically identical."
+}

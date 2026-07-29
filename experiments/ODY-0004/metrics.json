@@ -1,0 +1,17 @@
+{
+  "theta": 10000.0,
+  "rotary_dim": 128,
+  "head_dim": 128,
+  "max_position_embeddings": 4096,
+  "cache_build_seconds": 0.002301,
+  "cache_memory_bytes": 2097408,
+  "rotate_mean_seconds": 0.00114166,
+  "rotate_elems_per_second": 1377700103.75,
+  "device": "cpu",
+  "shape": [
+    2,
+    512,
+    12,
+    128
+  ]
+}

@@ -7,7 +7,7 @@ Notes for Odyssey's decoder-only transformer.
 | Doc | Phase | Status |
 | --- | --- | --- |
 | [embeddings.md](embeddings.md) | 3 | Complete |
-| RoPE | 4 | Planned |
+| [rope.md](rope.md) | 4 | Complete |
 | RMSNorm | 5 | Planned |
 | Attention | 6 | Planned |
 

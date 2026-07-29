@@ -81,3 +81,21 @@ Details: [experiments/ODY-0002/README.md](experiments/ODY-0002/README.md)
 | Lessons | Embedding is a gather not a matmul; `math/` notes should ship with each neural phase; weight tying deferred |
 
 Details: [experiments/ODY-0003/README.md](experiments/ODY-0003/README.md)
+
+---
+
+## ODY-0004 — Rotary Positional Embeddings
+
+| Field | Value |
+| --- | --- |
+| ID | ODY-0004 |
+| Date | 2026-07-29 |
+| Phase | 4 |
+| Purpose | LLaMA-style RoPE + Phalanx numerical parity |
+| Config | `configs/model.yaml` / experiment `config.yaml` |
+| theta / rotary_dim | 10000 / 128 |
+| Result | **Successful** |
+| Validation | Max abs error ≈ 4.8e-7 vs Phalanx (`PASS` @ 1e-6) |
+| Lessons | Keep inv_freq + adjacent-pair rotate bit-identical to Runtime; validate every layer |
+
+Details: [experiments/ODY-0004/README.md](experiments/ODY-0004/README.md)

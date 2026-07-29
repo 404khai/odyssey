@@ -1,47 +1,35 @@
-# RoPE — Mathematical Note (Phase 4 outline)
+# RoPE — Mathematical Note (Phase 4)
 
-> Implementation lands in Phase 4. Equations recorded here so Phase 3 readers see what comes next.
+**Status:** Implemented in Odyssey + Phalanx (cross-validated)
 
-## Equations (preview)
-
-For head dimension \(d\) (even), position \(m\), and pair index \(i\):
+## Equations
 
 \[
-\theta_i = 10000^{-2i/d}
-\]
-
-\[
-\begin{pmatrix} q'_{2i} \\ q'_{2i+1} \end{pmatrix}
+\omega_i = \theta^{-2i/d_r}, \quad
+\begin{pmatrix} x_0' \\ x_1' \end{pmatrix}
 =
-\begin{pmatrix}
-\cos m\theta_i & -\sin m\theta_i \\
-\sin m\theta_i & \cos m\theta_i
-\end{pmatrix}
-\begin{pmatrix} q_{2i} \\ q_{2i+1} \end{pmatrix}
+R(m'\omega_i)
+\begin{pmatrix} x_0 \\ x_1 \end{pmatrix}
 \]
 
-Applied to query and key vectors; values typically untouched.
+Linear scaling: \(m' = m / \mathrm{factor}\).
 
-## Why it works
+## Complexity
 
-Relative position is encoded in the **relative rotation** between positions \(m\) and \(n\), improving length extrapolation vs absolute learned position embeddings.
-
-## Complexity (preview)
-
-- Time: \(O(B S D)\) to apply rotations
-- Memory: \(O(S \cdot d/2)\) for cached \(\cos/\sin\) tables (or on-the-fly)
-
-## Numerical stability
-
-Use float32 for angle tables when possible; watch bf16 precision at long contexts.
-
-## PyTorch vs Phalanx
-
-| Path | Status |
+| Resource | Cost |
 | --- | --- |
-| Odyssey `model/` RoPE module | Phase 4 |
-| Phalanx `layers::rope` | Already prototyping in runtime |
+| Apply | \(O(BSH d)\) |
+| Cache | \(O(S_{\max} d_r)\) |
 
-## References
+## Numerical Stability
 
-- Su et al., *RoFormer* (RoPE)
+- Build angles in float32
+- Default validation tolerance vs Phalanx: `1e-6`
+
+## PyTorch
+
+`OdysseyRoPE` / `rope_cache.RopeCacheManager`
+
+## Phalanx Runtime
+
+`layers::Rope` — identical adjacent-pair kernel; validated via `scripts/validate_rope.py`.

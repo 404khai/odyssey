@@ -39,12 +39,21 @@ Math companion: [math/embeddings.md](math/embeddings.md)
 
 ---
 
+## Phase 4 — RoPE *(complete)*
+
+| Paper / Study | Summary |
+| --- | --- |
+| RoFormer (Su et al.) | [papers/roformer.md](papers/roformer.md) |
+| Transformer positional encodings | [papers/attention_position.md](papers/attention_position.md) |
+| LLaMA RoPE notes | [papers/llama_rope.md](papers/llama_rope.md) |
+
+---
+
 ## Planned Reading (later phases)
 
 | Topic | Canonical paper / resource | Phase |
 | --- | --- | --- |
 | Attention | *Attention Is All You Need* (Vaswani et al., 2017) | 6+ |
-| RoPE | *RoFormer* (Su et al.) | 4 |
 | RMSNorm | *Root Mean Square Layer Normalization* | 5 |
 | SwiGLU | *GLU Variants Improve Transformer* (Shazeer) | 7 |
 | GPT-style LMs | GPT / Llama technical reports | 9–10 |
