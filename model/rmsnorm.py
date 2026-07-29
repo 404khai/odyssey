@@ -77,7 +77,9 @@ class OdysseyRMSNorm(nn.Module):
 
     def validate_input(self, x: torch.Tensor) -> None:
         if x.ndim < 1:
-            raise ValueError(f"expected at least rank-1 input, got shape {tuple(x.shape)}")
+            raise ValueError(
+                f"expected at least rank-1 input, got shape {tuple(x.shape)}"
+            )
         if x.shape[-1] != self.config.hidden_size:
             raise ValueError(
                 f"last dim {x.shape[-1]} != configured hidden_size "

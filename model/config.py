@@ -230,7 +230,9 @@ class NormConfig:
         return cls(
             type=str(data.get("type", "rmsnorm")).lower(),  # type: ignore[arg-type]
             hidden_size=int(data.get("hidden_size", 768)),
-            epsilon=float(data.get("epsilon", data.get("eps", data.get("rms_norm_eps", 1e-6)))),
+            epsilon=float(
+                data.get("epsilon", data.get("eps", data.get("rms_norm_eps", 1e-6)))
+            ),
             device=str(data.get("device", "cpu")),
             dtype=str(data.get("dtype", "float32")),
         )

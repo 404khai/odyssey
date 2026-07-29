@@ -4,7 +4,13 @@ from __future__ import annotations
 
 import torch
 
-from model import NormConfig, OdysseyEmbedding, OdysseyRMSNorm, OdysseyRoPE, load_norm_config
+from model import (
+    NormConfig,
+    OdysseyEmbedding,
+    OdysseyRMSNorm,
+    OdysseyRoPE,
+    load_norm_config,
+)
 
 
 def test_output_shape_matches_input() -> None:
@@ -90,10 +96,10 @@ def test_integration_embedding_rope_rmsnorm() -> None:
     """Embedding → RoPE path on head dims, then RMSNorm on residual stream."""
     from model import EmbeddingConfig, RopeConfig
 
-    emb = OdysseyEmbedding(EmbeddingConfig(vocab_size=64, hidden_size=32, padding_idx=None))
-    rope = OdysseyRoPE(
-        RopeConfig(head_dim=8, rotary_dim=8, max_position_embeddings=32)
+    emb = OdysseyEmbedding(
+        EmbeddingConfig(vocab_size=64, hidden_size=32, padding_idx=None)
     )
+    rope = OdysseyRoPE(RopeConfig(head_dim=8, rotary_dim=8, max_position_embeddings=32))
     norm = OdysseyRMSNorm(NormConfig(hidden_size=32))
 
     ids = torch.randint(0, 64, (2, 4))

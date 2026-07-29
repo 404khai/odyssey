@@ -4,7 +4,13 @@ from __future__ import annotations
 
 import torch
 
-from model import NormConfig, OdysseyRMSNorm, describe_residual_flow, pre_norm_residual, residual_add
+from model import (
+    NormConfig,
+    OdysseyRMSNorm,
+    describe_residual_flow,
+    pre_norm_residual,
+    residual_add,
+)
 
 
 def test_residual_add_matches_sum() -> None:

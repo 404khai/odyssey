@@ -48,7 +48,9 @@ def _read_f32(path: Path, shape: tuple[int, ...]) -> np.ndarray:
     return data.reshape(shape).copy()
 
 
-def run_odyssey(x: torch.Tensor, gamma: torch.Tensor, config: NormConfig) -> torch.Tensor:
+def run_odyssey(
+    x: torch.Tensor, gamma: torch.Tensor, config: NormConfig
+) -> torch.Tensor:
     norm = OdysseyRMSNorm(config)
     with torch.no_grad():
         norm.weight.copy_(gamma)

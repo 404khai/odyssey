@@ -37,7 +37,5 @@ def apply_scale(x: torch.Tensor, gamma: torch.Tensor) -> torch.Tensor:
     if gamma.ndim != 1:
         raise ValueError(f"gamma must be rank-1, got shape {tuple(gamma.shape)}")
     if x.shape[-1] != gamma.shape[0]:
-        raise ValueError(
-            f"last dim {x.shape[-1]} != gamma length {gamma.shape[0]}"
-        )
+        raise ValueError(f"last dim {x.shape[-1]} != gamma length {gamma.shape[0]}")
     return x * gamma.to(dtype=x.dtype, device=x.device)

@@ -78,9 +78,7 @@ def main() -> None:
         y = norm(x_b)
         y.pow(2).mean().backward()
 
-    bwd_s = _measure(
-        _bwd, warmup=args.warmup, repeats=args.repeats, sync_cuda=sync
-    )
+    bwd_s = _measure(_bwd, warmup=args.warmup, repeats=args.repeats, sync_cuda=sync)
 
     elems = args.batch * args.seq * args.hidden_size
     metrics = {
