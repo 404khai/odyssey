@@ -6,7 +6,7 @@
 
 ---
 
-**Status:** Research Project — Phase 6 complete · **Spec v1.0.0** frozen  
+**Status:** Research Project — Phase 7 complete · **Spec v1.0.0** frozen  
 **Language:** Python 3.12+  
 **Framework:** PyTorch  
 **Target Runtime:** [Phalanx Runtime](https://github.com/404khai/phalanx)  
@@ -37,6 +37,7 @@ Odyssey is a research repository for building a small, carefully engineered deco
 | 4 | **RoPE** (`OdysseyRoPE`) + Phalanx numerical validation |
 | 5 | **RMSNorm** + pre-norm residuals + Phalanx validation |
 | 6 | **SwiGLU** (`OdysseySwiGLU`) + Phalanx validation |
+| 7 | **GQA Attention** (`OdysseyAttention`) + Phalanx validation |
 
 ```mermaid
 flowchart TD
@@ -70,6 +71,26 @@ python scripts/validate_swiglu.py
 Docs: [`docs/architecture/swiglu.md`](docs/architecture/swiglu.md) · Spec: [`spec/feedforward.md`](spec/feedforward.md)
 
 ---
+
+
+## Grouped Query Attention (Phase 7)
+
+```python
+from model import OdysseyAttention, load_attention_config, OdysseyRoPE, RopeConfig
+cfg = load_attention_config()
+rope = OdysseyRoPE(RopeConfig(head_dim=cfg.head_dim, rotary_dim=cfg.head_dim))
+attn = OdysseyAttention(cfg, rope=rope)
+y = attn(x)  # (B, S, D) → (B, S, D)
+```
+
+Cross-runtime check:
+
+```bash
+python scripts/validate_attention.py
+```
+
+Docs: [docs/architecture/attention.md](docs/architecture/attention.md) · Spec: [spec/attention.md](spec/attention.md)
+
 
 ## RMSNorm & Residuals (Phase 5)
 
@@ -247,7 +268,8 @@ MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 | 4 | RoPE (+ Phalanx validation) | **Complete** |
 | 5 | RMSNorm + residuals (+ Phalanx validation) | **Complete** |
 | 6 | SwiGLU FFN (+ Phalanx validation) | **Complete** |
-| 7–20 | Attention → Odyssey v1 | Planned |
+| 7 | GQA Attention (+ Phalanx validation) | **Complete** |
+| 8–20 | Decoder block → Odyssey v1 | Planned |
 
 ---
 
@@ -262,6 +284,7 @@ MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 | ODY-0004 | RoPE + Phalanx parity | Successful |
 | ODY-0005 | RMSNorm + Phalanx parity | Successful |
 | ODY-0006 | SwiGLU + Phalanx parity | Successful |
+| ODY-0007 | GQA Attention + Phalanx parity | Successful |
 
 ---
 

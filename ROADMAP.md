@@ -70,10 +70,12 @@ Development proceeds **one phase at a time**. Complete, document, commit, then w
 
 ---
 
-## Phase 7 — Multi-Head Attention
+## Phase 7 — Multi-Head & Grouped Query Attention *(complete)*
 
-- Causal masking
-- Scaled dot-product attention
+- Causal GQA (`OdysseyAttention`) with MHA reference wrapper
+- Stable Softmax, causal mask, QKV/O projections
+- Cross-implementation validation vs Phalanx (`validate_attention`)
+- ODY-0007 baseline
 
 ---
 

@@ -20,7 +20,7 @@ Each note covers:
 | [rope.md](rope.md) | 4 | Written + cross-validated |
 | [rmsnorm.md](rmsnorm.md) | 5 | Written + cross-validated |
 | [residuals.md](residuals.md) | 5 | Written |
-| [attention.md](attention.md) | 6 | Outline (pre-implementation) |
+| [attention.md](attention.md) | 7 | Complete (GQA + causal SDPA) |
 | [swiglu.md](swiglu.md) | 6 | Written + cross-validated |
 | [loss.md](loss.md) | 10 | Outline (pre-implementation) |
 

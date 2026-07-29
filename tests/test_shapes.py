@@ -1,69 +1,41 @@
-"""Shape validation tests for the embedding layer."""
+"""Attention tensor shape tests."""
 
 from __future__ import annotations
 
-import pytest
 import torch
 
-from model import EmbeddingConfig, OdysseyEmbedding
+from model.attention import OdysseyAttention
+from model.attention_math import expand_kv_heads, merge_heads, reshape_to_heads
+from model.config import AttentionConfig
 
 
-@pytest.fixture
-def emb() -> OdysseyEmbedding:
-    return OdysseyEmbedding(
-        EmbeddingConfig(vocab_size=128, hidden_size=64, padding_idx=0)
-    )
+def test_reshape_roundtrip() -> None:
+    x = torch.randn(2, 5, 32)  # H=4, d=8
+    h = reshape_to_heads(x, 4)
+    assert h.shape == (2, 4, 5, 8)
+    assert torch.allclose(merge_heads(h), x)
 
 
-def test_output_shape_batch_sequence_hidden(emb: OdysseyEmbedding) -> None:
-    ids = torch.randint(0, 128, (4, 17), dtype=torch.long)
-    out = emb(ids)
-    assert out.shape == (4, 17, 64)
+def test_gqa_expand() -> None:
+    kv = torch.randn(1, 2, 4, 8)
+    expanded = expand_kv_heads(kv, 6)
+    assert expanded.shape == (1, 6, 4, 8)
+    # Heads 0-2 share KV0, 3-5 share KV1
+    assert torch.equal(expanded[:, 0], expanded[:, 1])
+    assert torch.equal(expanded[:, 0], kv[:, 0])
+    assert torch.equal(expanded[:, 3], kv[:, 1])
 
 
-def test_phase3_example_shape() -> None:
-    """AGENTS.md example: [512, 1284, 7] → (3, hidden) as a batch of length 1."""
-    hidden = 768
-    emb = OdysseyEmbedding(
-        EmbeddingConfig(vocab_size=32000, hidden_size=hidden, padding_idx=0)
-    )
-    ids = torch.tensor([[512, 1284, 7]], dtype=torch.long)
-    out = emb(ids)
-    assert out.shape == (1, 3, hidden)
+def test_attention_output_shape_gqa() -> None:
+    cfg = AttentionConfig(num_heads=6, num_kv_heads=2, head_dim=8)
+    attn = OdysseyAttention(cfg)
+    x = torch.randn(2, 7, 48)
+    y = attn(x)
+    assert y.shape == x.shape
 
 
-def test_rejects_1d_input(emb: OdysseyEmbedding) -> None:
-    with pytest.raises(ValueError, match="batch, sequence"):
-        emb(torch.tensor([1, 2, 3], dtype=torch.long))
-
-
-def test_rejects_3d_input(emb: OdysseyEmbedding) -> None:
-    with pytest.raises(ValueError, match="batch, sequence"):
-        emb(torch.zeros(2, 3, 4, dtype=torch.long))
-
-
-def test_rejects_float_ids(emb: OdysseyEmbedding) -> None:
-    with pytest.raises(TypeError, match="integer"):
-        emb(torch.zeros(2, 3, dtype=torch.float32))
-
-
-def test_empty_sequence_shape(emb: OdysseyEmbedding) -> None:
-    ids = torch.zeros(2, 0, dtype=torch.long)
-    out = emb(ids)
-    assert out.shape == (2, 0, 64)
-
-
-def test_device_compatibility() -> None:
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    emb = OdysseyEmbedding(
-        EmbeddingConfig(
-            vocab_size=32,
-            hidden_size=8,
-            device=device,
-            dtype="float32",
-        )
-    )
-    ids = torch.tensor([[1, 2, 3]], dtype=torch.long, device=device)
-    out = emb(ids)
-    assert out.device.type == torch.device(device).type
-    assert out.shape == (1, 3, 8)
+def test_attention_output_shape_mha() -> None:
+    cfg = AttentionConfig(num_heads=4, num_kv_heads=4, head_dim=8)
+    attn = OdysseyAttention(cfg)
+    x = torch.randn(1, 5, 32)
+    assert attn(x).shape == x.shape

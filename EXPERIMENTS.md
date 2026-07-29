@@ -135,3 +135,21 @@ Details: [experiments/ODY-0005/README.md](experiments/ODY-0005/README.md)
 | Lessons | Float64 GEMM accum + documented SwiGLU abs tol keep train/serve aligned |
 
 Details: [experiments/ODY-0006/README.md](experiments/ODY-0006/README.md)
+
+
+---
+
+## ODY-0007 — Grouped Query Attention
+
+| Field | Value |
+| --- | --- |
+| ID | ODY-0007 |
+| Date | 2026-07-29 |
+| Phase | 7 |
+| Purpose | Causal GQA + Phalanx parity |
+| Config | `configs/model.yaml` `attention:` (H=12, H_kv=4, d=64) |
+| Result | **Successful** |
+| Metrics | Max abs error ≈ 1.30e-04 (tol 1e-3); Tiny params 1,572,864 |
+| Lessons | GQA broadcast + float64 GEMM parity with Phalanx; RoPE-on-Q/K must share layout conventions |
+
+Details: [experiments/ODY-0007/README.md](experiments/ODY-0007/README.md)

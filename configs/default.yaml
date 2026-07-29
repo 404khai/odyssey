@@ -2,8 +2,8 @@
 # All hyperparameters should eventually flow from config files.
 
 experiment:
-  id: ODY-0006
-  name: odyssey-swiglu-baseline
+  id: ODY-0007
+  name: odyssey-attention-gqa-baseline
   seed: 42
 
 model:
@@ -13,6 +13,7 @@ model:
   hidden_size: 768
   num_layers: 12
   num_heads: 12
+  num_kv_heads: 4
   intermediate_size: 2048
   embedding:
     padding_idx: 0
@@ -31,6 +32,15 @@ model:
   norm:
     type: rmsnorm
     epsilon: 0.000001
+    device: cpu
+    dtype: float32
+  attention:
+    num_heads: 12
+    num_kv_heads: 4
+    head_dim: 64
+    dropout: 0.0
+    causal: true
+    bias: false
     device: cpu
     dtype: float32
   feed_forward:

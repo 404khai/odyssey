@@ -77,3 +77,9 @@ Math companions: [math/rmsnorm.md](math/rmsnorm.md), [math/residuals.md](math/re
 | Attention | *Attention Is All You Need* (Vaswani et al., 2017) | 6+ |
 | GPT-style LMs | GPT / Llama technical reports | 9–10 |
 | DPO | *Direct Preference Optimization* (Rafailov et al.) | 14 |
+
+## Phase 7 — Attention
+
+- [papers/attention.md](papers/attention.md) — Attention Is All You Need
+- [papers/llama_attention.md](papers/llama_attention.md) — LLaMA attention / RoPE / GQA
+- [papers/gqa.md](papers/gqa.md) — GQA paper notes
