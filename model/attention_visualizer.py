@@ -71,8 +71,7 @@ def plot_attention_heatmap(
     ax.set_xlabel("key position")
     ax.set_ylabel("query position")
     ax.set_title(
-        f"Attention head {head} "
-        f"(H={cfg.num_heads}, H_kv={cfg.num_kv_heads})"
+        f"Attention head {head} " f"(H={cfg.num_heads}, H_kv={cfg.num_kv_heads})"
     )
     fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     fig.tight_layout()
@@ -96,7 +95,9 @@ def plot_gqa_grouping(
     for h in range(num_heads):
         kv = h // groups
         ax.barh(0, 1, left=h, color=colors[kv], edgecolor="white", height=0.6)
-        ax.text(h + 0.5, 0, f"Q{h}", ha="center", va="center", fontsize=8, color="white")
+        ax.text(
+            h + 0.5, 0, f"Q{h}", ha="center", va="center", fontsize=8, color="white"
+        )
     ax.set_xlim(0, num_heads)
     ax.set_yticks([])
     ax.set_xlabel("query head index")

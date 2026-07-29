@@ -41,7 +41,9 @@ def make_causal_mask(
     return mask
 
 
-def apply_causal_mask(scores: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:
+def apply_causal_mask(
+    scores: torch.Tensor, mask: torch.Tensor | None = None
+) -> torch.Tensor:
     """Add causal mask to scores ``(..., S, T)``.
 
     If ``mask`` is ``None``, builds a square mask from the last two dims.

@@ -30,9 +30,7 @@ def reshape_to_heads(x: torch.Tensor, num_heads: int) -> torch.Tensor:
         raise ValueError(f"expected rank-3 (B,S,H*d), got shape {tuple(x.shape)}")
     batch, seq, hidden = x.shape
     if hidden % num_heads != 0:
-        raise ValueError(
-            f"last dim {hidden} not divisible by num_heads {num_heads}"
-        )
+        raise ValueError(f"last dim {hidden} not divisible by num_heads {num_heads}")
     head_dim = hidden // num_heads
     # (B, S, H, d) then swap heads before sequence for SDPA layout.
     return x.view(batch, seq, num_heads, head_dim).transpose(1, 2).contiguous()
@@ -43,11 +41,7 @@ def merge_heads(x: torch.Tensor) -> torch.Tensor:
     if x.ndim != 4:
         raise ValueError(f"expected rank-4 (B,H,S,d), got shape {tuple(x.shape)}")
     batch, num_heads, seq, head_dim = x.shape
-    return (
-        x.transpose(1, 2)
-        .contiguous()
-        .view(batch, seq, num_heads * head_dim)
-    )
+    return x.transpose(1, 2).contiguous().view(batch, seq, num_heads * head_dim)
 
 
 def expand_kv_heads(kv: torch.Tensor, num_query_heads: int) -> torch.Tensor:

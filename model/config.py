@@ -241,7 +241,6 @@ class NormConfig:
         )
 
 
-
 @dataclass(slots=True)
 class AttentionConfig:
     """Grouped-query / multi-head attention hyperparameters.

@@ -18,12 +18,8 @@ from model import (
 
 
 def test_parameter_count_gqa_vs_mha() -> None:
-    gqa = OdysseyAttention(
-        AttentionConfig(num_heads=8, num_kv_heads=2, head_dim=16)
-    )
-    mha = OdysseyAttention(
-        AttentionConfig(num_heads=8, num_kv_heads=8, head_dim=16)
-    )
+    gqa = OdysseyAttention(AttentionConfig(num_heads=8, num_kv_heads=2, head_dim=16))
+    mha = OdysseyAttention(AttentionConfig(num_heads=8, num_kv_heads=8, head_dim=16))
     # GQA saves on K/V projections: H_kv * d * D instead of H * d * D (×2 for K+V)
     assert gqa.parameter_count() < mha.parameter_count()
 
@@ -37,12 +33,8 @@ def test_causal_no_future_leak() -> None:
         for p in attn.parameters():
             p.zero_()
         # q,k near zero → uniform over allowed; set V and O so we can detect positions.
-        attn.projections.v_proj.weight.copy_(
-            torch.eye(cfg.kv_dim, cfg.hidden_size)
-        )
-        attn.projections.o_proj.weight.copy_(
-            torch.eye(cfg.hidden_size, cfg.query_dim)
-        )
+        attn.projections.v_proj.weight.copy_(torch.eye(cfg.kv_dim, cfg.hidden_size))
+        attn.projections.o_proj.weight.copy_(torch.eye(cfg.hidden_size, cfg.query_dim))
         # Distinct token embeddings along seq
         x = torch.zeros(1, 4, cfg.hidden_size)
         for t in range(4):
@@ -55,9 +47,7 @@ def test_causal_no_future_leak() -> None:
 
 def test_with_rope() -> None:
     cfg = AttentionConfig(num_heads=4, num_kv_heads=2, head_dim=8)
-    rope = OdysseyRoPE(
-        RopeConfig(head_dim=8, rotary_dim=8, max_position_embeddings=32)
-    )
+    rope = OdysseyRoPE(RopeConfig(head_dim=8, rotary_dim=8, max_position_embeddings=32))
     attn = OdysseyAttention(cfg, rope=rope)
     x = torch.randn(2, 5, 32)
     y = attn(x)
@@ -66,9 +56,7 @@ def test_with_rope() -> None:
 
 
 def test_float16() -> None:
-    cfg = AttentionConfig(
-        num_heads=4, num_kv_heads=2, head_dim=8, dtype="float16"
-    )
+    cfg = AttentionConfig(num_heads=4, num_kv_heads=2, head_dim=8, dtype="float16")
     attn = OdysseyAttention(cfg)
     x = torch.randn(1, 4, 32, dtype=torch.float16)
     y = attn(x)
@@ -125,9 +113,7 @@ def test_integration_stack() -> None:
     emb = OdysseyEmbedding(
         EmbeddingConfig(vocab_size=32, hidden_size=hidden, padding_idx=None)
     )
-    rope = OdysseyRoPE(
-        RopeConfig(head_dim=8, rotary_dim=8, max_position_embeddings=16)
-    )
+    rope = OdysseyRoPE(RopeConfig(head_dim=8, rotary_dim=8, max_position_embeddings=16))
     norm = OdysseyRMSNorm(NormConfig(hidden_size=hidden))
     attn = OdysseyAttention(
         AttentionConfig(num_heads=4, num_kv_heads=2, head_dim=8),
