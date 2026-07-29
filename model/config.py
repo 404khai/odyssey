@@ -1,4 +1,4 @@
-"""Configuration for Odyssey model components (embeddings + RoPE + RMSNorm).
+"""Configuration for Odyssey model components (embeddings + RoPE + RMSNorm + Attention).
 
 Why this exists:
     Embedding, RoPE, and normalization hyperparameters must stay out of
@@ -40,6 +40,7 @@ RopeScalingType = Literal["none", "linear"]
 NormType = Literal["rmsnorm"]
 FeedForwardType = Literal["swiglu"]
 ActivationType = Literal["silu", "swish", "swiglu"]
+AttentionType = Literal["gqa", "mha", "mqa"]
 
 DTYPE_MAP: dict[str, torch.dtype] = {
     "float32": torch.float32,
@@ -241,6 +242,113 @@ class NormConfig:
 
 
 @dataclass(slots=True)
+class AttentionConfig:
+    """Grouped-query / multi-head attention hyperparameters.
+
+    Must match Phalanx ``AttentionConfig`` + ``layers::Attention`` semantics.
+    Default Odyssey path is GQA (``num_kv_heads <= num_heads``).
+    """
+
+    num_heads: int = 12
+    num_kv_heads: int = 4
+    head_dim: int = 64
+    # 0 → auto ``num_heads * head_dim`` in ``__post_init__`` (keeps type ``int`` for mypy).
+    hidden_size: int = 0
+    dropout: float = 0.0
+    causal: bool = True
+    bias: bool = False
+    device: str = "cpu"
+    dtype: str = "float32"
+
+    def __post_init__(self) -> None:
+        if self.num_heads < 1:
+            raise ValueError("num_heads must be >= 1")
+        if self.num_kv_heads < 1:
+            raise ValueError("num_kv_heads must be >= 1")
+        if self.num_heads % self.num_kv_heads != 0:
+            raise ValueError(
+                f"num_heads ({self.num_heads}) must be divisible by "
+                f"num_kv_heads ({self.num_kv_heads})"
+            )
+        if self.head_dim < 1:
+            raise ValueError("head_dim must be >= 1")
+        if self.dropout < 0.0 or self.dropout >= 1.0:
+            raise ValueError("dropout must be in [0, 1)")
+        if self.bias:
+            raise ValueError("attention bias must be False (Odyssey Spec v1.0.0)")
+        if self.dtype not in DTYPE_MAP:
+            raise ValueError(f"dtype must be one of {tuple(DTYPE_MAP)}")
+        expected_hidden = self.num_heads * self.head_dim
+        if self.hidden_size == 0:
+            self.hidden_size = expected_hidden
+        elif self.hidden_size != expected_hidden:
+            raise ValueError(
+                f"hidden_size ({self.hidden_size}) must equal "
+                f"num_heads * head_dim ({expected_hidden})"
+            )
+
+    @property
+    def torch_dtype(self) -> torch.dtype:
+        return DTYPE_MAP[self.dtype]
+
+    @property
+    def torch_device(self) -> torch.device:
+        return torch.device(self.device)
+
+    @property
+    def query_dim(self) -> int:
+        return self.num_heads * self.head_dim
+
+    @property
+    def kv_dim(self) -> int:
+        return self.num_kv_heads * self.head_dim
+
+    @property
+    def gqa_groups(self) -> int:
+        return self.num_heads // self.num_kv_heads
+
+    @property
+    def is_gqa(self) -> bool:
+        return self.num_kv_heads != self.num_heads and self.num_kv_heads > 1
+
+    @property
+    def is_mqa(self) -> bool:
+        return self.num_kv_heads == 1 and self.num_heads > 1
+
+    @property
+    def is_mha(self) -> bool:
+        return self.num_kv_heads == self.num_heads
+
+    @property
+    def attention_type(self) -> AttentionType:
+        if self.is_mha:
+            return "mha"
+        if self.is_mqa:
+            return "mqa"
+        return "gqa"
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> AttentionConfig:
+        num_heads = int(data.get("num_heads", 12))
+        head_dim = int(data.get("head_dim", 64))
+        hidden = data.get("hidden_size")
+        return cls(
+            num_heads=num_heads,
+            num_kv_heads=int(data.get("num_kv_heads", num_heads)),
+            head_dim=head_dim,
+            hidden_size=0 if hidden is None else int(hidden),
+            dropout=float(data.get("dropout", 0.0)),
+            causal=bool(data.get("causal", True)),
+            bias=bool(data.get("bias", False)),
+            device=str(data.get("device", "cpu")),
+            dtype=str(data.get("dtype", "float32")),
+        )
+
+
+@dataclass(slots=True)
 class FeedForwardConfig:
     """SwiGLU FFN hyperparameters — must match Phalanx ``SwiGlu``."""
 
@@ -304,11 +412,12 @@ class ModelConfig:
     intermediate_size: int = 2048
     num_layers: int = 12
     num_heads: int = 12
-    num_kv_heads: int = 12
+    num_kv_heads: int = 4
     context_length: int = 2048
     embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
     rope: RopeConfig = field(default_factory=RopeConfig)
     norm: NormConfig = field(default_factory=NormConfig)
+    attention: AttentionConfig = field(default_factory=AttentionConfig)
     feed_forward: FeedForwardConfig = field(default_factory=FeedForwardConfig)
 
     def __post_init__(self) -> None:
@@ -323,6 +432,26 @@ class ModelConfig:
                 epsilon=self.norm.epsilon,
                 device=self.norm.device,
                 dtype=self.norm.dtype,
+            )
+
+        # Keep nested attention aligned with top-level head layout.
+        expected_head_dim = self.hidden_size // self.num_heads
+        if (
+            self.attention.num_heads != self.num_heads
+            or self.attention.num_kv_heads != self.num_kv_heads
+            or self.attention.head_dim != expected_head_dim
+            or self.attention.hidden_size != self.hidden_size
+        ):
+            self.attention = AttentionConfig(
+                num_heads=self.num_heads,
+                num_kv_heads=self.num_kv_heads,
+                head_dim=expected_head_dim,
+                hidden_size=self.hidden_size,
+                dropout=self.attention.dropout,
+                causal=self.attention.causal,
+                bias=self.attention.bias,
+                device=self.attention.device,
+                dtype=self.attention.dtype,
             )
         if (
             self.feed_forward.hidden_size != self.hidden_size
@@ -354,6 +483,7 @@ class ModelConfig:
             "embedding": self.embedding.to_dict(),
             "rope": self.rope.to_dict(),
             "norm": self.norm.to_dict(),
+            "attention": self.attention.to_dict(),
             "feed_forward": self.feed_forward.to_dict(),
         }
 
@@ -363,6 +493,7 @@ class ModelConfig:
         rope_raw = dict(data.get("rope", {}) or {})
         norm_raw = dict(data.get("norm", {}) or {})
         ff_raw = dict(data.get("feed_forward", {}) or {})
+        attn_raw = dict(data.get("attention", {}) or {})
         hidden = int(data.get("hidden_size", 768))
         intermediate = int(data.get("intermediate_size", 2048))
         heads = int(data.get("num_heads", 12))
@@ -376,6 +507,10 @@ class ModelConfig:
         norm_raw.setdefault("hidden_size", hidden)
         ff_raw.setdefault("hidden_size", hidden)
         ff_raw.setdefault("intermediate_size", intermediate)
+        attn_raw.setdefault("num_heads", heads)
+        attn_raw.setdefault("num_kv_heads", int(data.get("num_kv_heads", heads)))
+        attn_raw.setdefault("head_dim", head_dim)
+        attn_raw.setdefault("hidden_size", hidden)
         return cls(
             name=str(data.get("name", "odyssey-tiny")),
             vocab_size=int(data.get("vocab_size", data.get("vocabulary_size", 32000))),
@@ -388,6 +523,7 @@ class ModelConfig:
             embedding=EmbeddingConfig.from_dict(emb_raw),
             rope=RopeConfig.from_dict(rope_raw),
             norm=NormConfig.from_dict(norm_raw),
+            attention=AttentionConfig.from_dict(attn_raw),
             feed_forward=FeedForwardConfig.from_dict(ff_raw),
         )
 
@@ -439,3 +575,8 @@ def load_norm_config(path: Path | str | None = None) -> NormConfig:
 def load_feed_forward_config(path: Path | str | None = None) -> FeedForwardConfig:
     """Load SwiGLU FFN config from ``configs/model.yaml``."""
     return load_model_config(path).feed_forward
+
+
+def load_attention_config(path: Path | str | None = None) -> AttentionConfig:
+    """Load attention / GQA config from ``configs/model.yaml``."""
+    return load_model_config(path).attention

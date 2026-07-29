@@ -1,0 +1,47 @@
+{
+  "component": "Attention",
+  "num_heads": 12,
+  "num_kv_heads": 4,
+  "head_dim": 64,
+  "parameter_count_tiny": 1572864,
+  "validation_max_error": 0.0001297,
+  "validation_mean_error": 2.9e-06,
+  "tolerance": 0.001,
+  "status": "PASS",
+  "batch": 1,
+  "seq": 64,
+  "parameter_count": 1572864,
+  "memory_bytes": 6291456,
+  "inspect": {
+    "type": "gqa",
+    "num_heads": 12,
+    "num_kv_heads": 4,
+    "head_dim": 64,
+    "hidden_size": 768,
+    "gqa_groups": 3,
+    "causal": true,
+    "dropout": 0.0,
+    "bias": false,
+    "scale": 0.125,
+    "rope": false,
+    "parameter_count": 1572864,
+    "memory_bytes": 6291456,
+    "projections": {
+      "q_proj": 589824,
+      "k_proj": 196608,
+      "v_proj": 196608,
+      "o_proj": 589824
+    },
+    "shapes": {
+      "input": "(B, S, 768)",
+      "q": "(B, 12, S, 64)",
+      "k": "(B, 4, S, 64)",
+      "v": "(B, 4, S, 64)",
+      "output": "(B, S, 768)"
+    },
+    "device": "cpu",
+    "dtype": "torch.float32"
+  },
+  "forward_latency_ms": 1.6686082992237061,
+  "tokens_per_sec": 38355.316840851745
+}

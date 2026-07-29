@@ -15,6 +15,20 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.7.0] — 2026-07-29
+
+### Added
+
+- Grouped Query Attention (`model.OdysseyAttention`, GQA/MHA/MQA layouts)
+- Modules: `projection`, `causal_mask`, `softmax`, `attention_math`, `gqa`
+- `AttentionConfig` + `attention:` in `configs/model.yaml` (Tiny: H=12, H_kv=4)
+- Cross-implementation validator `scripts/validate_attention.py` (vs Phalanx)
+- Benchmarks, papers (`attention`, `gqa`, `llama_attention`), experiment `ODY-0007`
+- Attention heatmaps under `assets/attention/`
+- Shared suite entry `../validation/test_attention.py`
+
+---
+
 ## [0.6.0] — 2026-07-29
 
 ### Added

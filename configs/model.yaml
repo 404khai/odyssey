@@ -1,4 +1,4 @@
-# Odyssey model configuration (Phase 6+)
+# Odyssey model configuration (Phase 7+)
 
 model:
   name: odyssey-tiny
@@ -7,7 +7,7 @@ model:
   intermediate_size: 2048
   num_layers: 12
   num_heads: 12
-  num_kv_heads: 12
+  num_kv_heads: 4
   context_length: 2048
 
   embedding:
@@ -31,6 +31,17 @@ model:
   norm:
     type: rmsnorm
     epsilon: 0.000001
+    device: cpu
+    dtype: float32
+
+  # GQA attention — must stay aligned with Phalanx layers::Attention
+  attention:
+    num_heads: 12
+    num_kv_heads: 4
+    head_dim: 64
+    dropout: 0.0
+    causal: true
+    bias: false
     device: cpu
     dtype: float32
 

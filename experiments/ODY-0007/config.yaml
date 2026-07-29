@@ -1,0 +1,13 @@
+# ODY-0007 snapshot
+attention:
+  num_heads: 12
+  num_kv_heads: 4
+  head_dim: 64
+  dropout: 0.0
+  causal: true
+  bias: false
+validation_default:
+  num_heads: 8
+  num_kv_heads: 2
+  head_dim: 8
+  apply_rope: true

@@ -43,13 +43,17 @@ def test_config_loads() -> None:
     assert config["tokenizer"]["path"] == "assets/tokenizer/bpe/odyssey.model"
     assert config["tokenizer"]["type"] == "bpe"
     assert config["tokenizer"]["config"] == "configs/tokenizer.yaml"
-    assert config["experiment"]["id"] == "ODY-0006"
+    assert config["experiment"]["id"] == "ODY-0007"
     assert config["model"]["embedding"]["init_strategy"] == "xavier_uniform"
     assert config["model"]["rope"]["theta"] == 10000.0
     assert config["model"]["norm"]["type"] == "rmsnorm"
     assert config["model"]["norm"]["epsilon"] == 1e-6
     assert config["model"]["feed_forward"]["type"] == "swiglu"
     assert config["model"]["feed_forward"]["intermediate_size"] == 2048
+    assert config["model"]["attention"]["num_heads"] == 12
+    assert config["model"]["attention"]["num_kv_heads"] == 4
+    assert config["model"]["attention"]["head_dim"] == 64
+    assert config["model"]["attention"]["causal"] is True
 
 
 def test_config_yaml_parses_directly() -> None:

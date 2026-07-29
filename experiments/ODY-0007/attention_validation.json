@@ -1,0 +1,34 @@
+{
+  "component": "Attention",
+  "odyssey_spec": "1.0.0",
+  "manifest": {
+    "shape": [
+      2,
+      8,
+      64
+    ],
+    "hidden_size": 64,
+    "num_heads": 8,
+    "num_kv_heads": 2,
+    "head_dim": 8,
+    "apply_rope": true,
+    "rope_theta": 10000.0,
+    "position_offset": 0,
+    "seed": 0
+  },
+  "comparison": {
+    "max_error": 0.00012969970703125,
+    "mean_error": 2.9033253667876124e-06,
+    "max_relative_error": 0.00046447522364183823,
+    "tolerance": 0.001,
+    "pass": true,
+    "status": "PASS"
+  },
+  "max_error": 0.00012969970703125,
+  "mean_error": 2.9033253667876124e-06,
+  "max_relative_error": 0.00046447522364183823,
+  "tolerance": 0.001,
+  "status": "PASS",
+  "work_dir": "/var/folders/c0/32vfjvv9233c0nmghgqt_mp40000gn/T/attn_val_h92ftacb",
+  "message": "Odyssey and Phalanx are mathematically identical."
+}

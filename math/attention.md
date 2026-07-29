@@ -1,26 +1,26 @@
-# Attention — Mathematical Note (Phase 6 outline)
+# Attention — Mathematical Note
 
-> Pre-implementation outline.
+Normative equations: [`spec/attention.md`](../spec/attention.md).
 
-## Equations (preview)
+## Scaled dot-product
 
 \[
-\mathrm{Attention}(Q,K,V) = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d}}\right) V
+\mathrm{Attention}(Q,K,V)=\mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d}}+M\right)V
 \]
 
-Causal mask: set future scores to \(-\infty\) before softmax.
+Scaling by \(\sqrt{d}\) keeps score variance ~1 so Softmax is neither flat nor
+saturated (Vaswani et al.).
 
-Multi-head: split \(D\) into \(H\) heads of size \(d = D/H\), concatenate, project.
+## Stable Softmax
 
-## Complexity (preview)
+\[
+\mathrm{softmax}(z)_i=\frac{e^{z_i-\max_j z_j}}{\sum_k e^{z_k-\max_j z_j}}
+\]
 
-- Naive attention: time \(O(B H S^2 d)\), memory \(O(B H S^2)\) for scores
-- Memory-efficient kernels trade compute patterns for lower activation memory
+## GQA broadcast
 
-## Numerical stability
+For query head \(h\), KV head index is \(\lfloor h / (H/H_{kv}) \rfloor\).
 
-Scale by \(\sqrt{d}\); use online softmax / flash-style kernels later if needed.
+## Complexity
 
-## PyTorch vs Phalanx
-
-Training: PyTorch SDPA / manual matmul. Inference: Phalanx attention kernels over GGUF weights.
+Naive attention: time \(O(BHS^2d)\), score memory \(O(BHS^2)\).
