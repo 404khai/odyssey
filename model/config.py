@@ -252,7 +252,8 @@ class AttentionConfig:
     num_heads: int = 12
     num_kv_heads: int = 4
     head_dim: int = 64
-    hidden_size: int | None = None
+    # 0 → auto ``num_heads * head_dim`` in ``__post_init__`` (keeps type ``int`` for mypy).
+    hidden_size: int = 0
     dropout: float = 0.0
     causal: bool = True
     bias: bool = False
@@ -278,7 +279,7 @@ class AttentionConfig:
         if self.dtype not in DTYPE_MAP:
             raise ValueError(f"dtype must be one of {tuple(DTYPE_MAP)}")
         expected_hidden = self.num_heads * self.head_dim
-        if self.hidden_size is None:
+        if self.hidden_size == 0:
             self.hidden_size = expected_hidden
         elif self.hidden_size != expected_hidden:
             raise ValueError(
@@ -338,7 +339,7 @@ class AttentionConfig:
             num_heads=num_heads,
             num_kv_heads=int(data.get("num_kv_heads", num_heads)),
             head_dim=head_dim,
-            hidden_size=None if hidden is None else int(hidden),
+            hidden_size=0 if hidden is None else int(hidden),
             dropout=float(data.get("dropout", 0.0)),
             causal=bool(data.get("causal", True)),
             bias=bool(data.get("bias", False)),
