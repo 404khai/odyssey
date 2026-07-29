@@ -1,0 +1,30 @@
+# Odyssey model configuration (Phase 4+)
+
+model:
+  name: odyssey-tiny
+  vocab_size: 32000
+  hidden_size: 768
+  intermediate_size: 2048
+  num_layers: 12
+  num_heads: 12
+  num_kv_heads: 12
+  context_length: 2048
+
+  embedding:
+    padding_idx: 0
+    init_strategy: xavier_uniform
+    init_std: 0.02
+    device: cpu
+    dtype: float32
+
+  # RoPE — must stay aligned with Phalanx layers::Rope / Odyssey Spec v1
+  rope:
+    theta: 10000.0
+    # head_dim defaults to hidden_size / num_heads (= 64 for Tiny)
+    # Experiment ODY-0004 also exercises rotary_dim=128 with head_dim=128
+    rotary_dim: 64
+    max_position_embeddings: 2048
+    scaling: none          # none | linear  (NTK / YaRN deferred)
+    scaling_factor: 1.0
+    device: cpu
+    dtype: float32

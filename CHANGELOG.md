@@ -16,6 +16,19 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.4.0] — 2026-07-29
+
+### Added
+
+- LLaMA-style RoPE (`model.OdysseyRoPE`, cache, math, visualizer)
+- `configs/model.yaml` with rope hyperparameters
+- Cross-implementation validator `scripts/validate_rope.py` (vs Phalanx)
+- Benchmarks + assets under `assets/rope/`
+- Papers: RoFormer, attention positional encodings, LLaMA RoPE
+- Experiment `ODY-0004` (validation PASS, max abs error ~4.8e-7)
+
+---
+
 ## [0.3.0] — 2026-07-28
 
 ### Added

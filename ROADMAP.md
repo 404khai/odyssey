@@ -42,11 +42,12 @@ Development proceeds **one phase at a time**. Complete, document, commit, then w
 
 ---
 
-## Phase 4 — Rotary Positional Embeddings
+## Phase 4 — Rotary Positional Embeddings *(complete)*
 
-- RoPE implementation
-- Visualization
-- Tests
+- LLaMA-style RoPE (`OdysseyRoPE`)
+- Cos/sin cache, partial rotary dims, linear scaling
+- Cross-implementation validation vs Phalanx (`scripts/validate_rope.py`)
+- ODY-0004 baseline
 
 ---
 

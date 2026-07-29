@@ -17,7 +17,7 @@ Each note covers:
 | [linear_algebra.md](linear_algebra.md) | foundation | Written |
 | [tensor_shapes.md](tensor_shapes.md) | foundation | Written |
 | [embeddings.md](embeddings.md) | 3 | Written |
-| [rope.md](rope.md) | 4 | Outline (pre-implementation) |
+| [rope.md](rope.md) | 4 | Written + cross-validated |
 | [rmsnorm.md](rmsnorm.md) | 5 | Outline (pre-implementation) |
 | [attention.md](attention.md) | 6 | Outline (pre-implementation) |
 | [swiglu.md](swiglu.md) | 7 | Outline (pre-implementation) |
