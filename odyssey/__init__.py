@@ -1,6 +1,6 @@
 """Odyssey research package.
 
-Phase 4 delivers LLaMA-style RoPE with Phalanx numerical parity.
+Phase 5 delivers LLaMA-style RMSNorm + pre-norm residuals with Phalanx parity.
 """
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"

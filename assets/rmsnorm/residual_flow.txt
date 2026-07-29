@@ -1,0 +1,11 @@
+Odyssey Pre-Norm Residual Flow
+==============================
+ordering: pre-norm
+
+input: (1, 16, 768)
+rmsnorm: (1, 16, 768)
+sublayer: (1, 16, 768)
+residual_add: (1, 16, 768)  (x + f(norm(x)))
+output: (1, 16, 768)
+
+Identity skip preserves gradient magnitude; Spec forbids post-norm.

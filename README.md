@@ -6,7 +6,7 @@
 
 ---
 
-**Status:** Research Project — Phase 4 complete · **Spec v1.0.0** frozen  
+**Status:** Research Project — Phase 5 complete · **Spec v1.0.0** frozen  
 **Language:** Python 3.12+  
 **Framework:** PyTorch  
 **Target Runtime:** [Phalanx Runtime](https://github.com/404khai/phalanx)  
@@ -35,6 +35,7 @@ Odyssey is a research repository for building a small, carefully engineered deco
 | 2 | **Owned** byte-level BPE library (`odyssey_tokenizer`) |
 | 3 | **Token embedding layer** (`OdysseyEmbedding`) |
 | 4 | **RoPE** (`OdysseyRoPE`) + Phalanx numerical validation |
+| 5 | **RMSNorm** + pre-norm residuals + Phalanx validation |
 
 ```mermaid
 flowchart TD
@@ -44,8 +45,30 @@ flowchart TD
     EmbeddingMatrix[Embedding Matrix] --> EmbeddingLookup
     EmbeddingLookup --> Vectors[Embedding Vectors]
     Vectors --> RoPE[RoPE]
-    RoPE --> TransformerBlock[Transformer Block]
+    RoPE --> RMSNorm[RMSNorm]
+    RMSNorm --> TransformerBlock[Transformer Block]
 ```
+
+---
+
+## RMSNorm & Residuals (Phase 5)
+
+```python
+from model import OdysseyRMSNorm, load_norm_config, residual_add
+
+norm = OdysseyRMSNorm(load_norm_config())
+h = residual_add(x, attn(norm(x)))  # Spec pre-norm ordering
+```
+
+Cross-check against Phalanx Runtime (must PASS):
+
+```bash
+python scripts/validate_rmsnorm.py
+# or from monorepo root:
+python ../validation/test_rmsnorm.py
+```
+
+Docs: [`docs/architecture/rmsnorm.md`](docs/architecture/rmsnorm.md) · Spec: [`spec/rmsnorm.md`](spec/rmsnorm.md)
 
 ---
 
@@ -202,7 +225,8 @@ MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 | 2 | Odyssey BPE library | **Complete** |
 | 3 | Embedding layer | **Complete** |
 | 4 | RoPE (+ Phalanx validation) | **Complete** |
-| 5–20 | RMSNorm → Odyssey v1 | Planned |
+| 5 | RMSNorm + residuals (+ Phalanx validation) | **Complete** |
+| 6–20 | Attention → Odyssey v1 | Planned |
 
 ---
 
@@ -215,6 +239,7 @@ MYPYPATH=tokenizer mypy --explicit-package-bases -p odyssey_tokenizer
 | ODY-0002 | Odyssey BPE tokenizer | Successful |
 | ODY-0003 | Token embedding layer | Successful |
 | ODY-0004 | RoPE + Phalanx parity | Successful |
+| ODY-0005 | RMSNorm + Phalanx parity | Successful |
 
 ---
 

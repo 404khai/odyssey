@@ -1,0 +1,27 @@
+{
+  "component": "RMSNorm",
+  "odyssey_spec": "1.0.0",
+  "manifest": {
+    "shape": [
+      2,
+      16,
+      768
+    ],
+    "hidden_size": 768,
+    "eps": 1e-06,
+    "seed": 0
+  },
+  "comparison": {
+    "max_error": 0.0,
+    "mean_error": 0.0,
+    "tolerance": 1e-06,
+    "pass": true,
+    "status": "PASS"
+  },
+  "max_error": 0.0,
+  "mean_error": 0.0,
+  "tolerance": 1e-06,
+  "status": "PASS",
+  "work_dir": "/var/folders/c0/32vfjvv9233c0nmghgqt_mp40000gn/T/rmsnorm_val_63eo_rrn",
+  "message": "Odyssey and Phalanx are mathematically identical."
+}

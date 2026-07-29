@@ -2,8 +2,8 @@
 # All hyperparameters should eventually flow from config files.
 
 experiment:
-  id: ODY-0004
-  name: odyssey-rope-baseline
+  id: ODY-0005
+  name: odyssey-rmsnorm-baseline
   seed: 42
 
 model:
@@ -26,6 +26,11 @@ model:
     max_position_embeddings: 2048
     scaling: none
     scaling_factor: 1.0
+    device: cpu
+    dtype: float32
+  norm:
+    type: rmsnorm
+    epsilon: 0.000001
     device: cpu
     dtype: float32
 

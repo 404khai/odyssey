@@ -1,0 +1,17 @@
+{
+  "hidden_size": 768,
+  "epsilon": 1e-06,
+  "dtype": "float32",
+  "device": "cpu",
+  "shape": [
+    4,
+    512,
+    768
+  ],
+  "parameter_count": 768,
+  "memory_bytes": 3072,
+  "forward_mean_seconds": 0.00137114,
+  "backward_mean_seconds": 0.03511673,
+  "forward_elems_per_second": 1147123546.98,
+  "backward_elems_per_second": 44789587.53
+}

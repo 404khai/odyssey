@@ -16,6 +16,23 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.0] — 2026-07-29
+
+### Added
+
+- LLaMA-style RMSNorm (`model.OdysseyRMSNorm`) with float32 RMS accumulation
+- Pre-norm residual helpers (`model.residual`)
+- Shared normalization math (`model.normalization`)
+- `NormConfig` + `norm:` section in `configs/model.yaml` / `configs/default.yaml`
+- Cross-implementation validator `scripts/validate_rmsnorm.py` (vs Phalanx)
+- Benchmarks `scripts/benchmark_rmsnorm.py` + residual flow assets
+- Papers: RMSNorm, residual connections, LLaMA normalization
+- Math notes: `math/rmsnorm.md`, `math/residuals.md`
+- Experiment `ODY-0005`
+- Shared monorepo suite entry: `../validation/test_rmsnorm.py`
+
+---
+
 ## [0.4.0] — 2026-07-29
 
 ### Added

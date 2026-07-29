@@ -8,7 +8,8 @@ Notes for Odyssey's decoder-only transformer.
 | --- | --- | --- |
 | [embeddings.md](embeddings.md) | 3 | Complete |
 | [rope.md](rope.md) | 4 | Complete |
-| RMSNorm | 5 | Planned |
+| [rmsnorm.md](rmsnorm.md) | 5 | Complete |
+| [residuals.md](residuals.md) | 5 | Complete |
 | Attention | 6 | Planned |
 
 Equation-level pedagogy: [`math/`](../../math/README.md) (non-normative).

@@ -99,3 +99,21 @@ Details: [experiments/ODY-0003/README.md](experiments/ODY-0003/README.md)
 | Lessons | Keep inv_freq + adjacent-pair rotate bit-identical to Runtime; validate every layer |
 
 Details: [experiments/ODY-0004/README.md](experiments/ODY-0004/README.md)
+
+---
+
+## ODY-0005 — RMSNorm & Residual Pathways
+
+| Field | Value |
+| --- | --- |
+| ID | ODY-0005 |
+| Date | 2026-07-29 |
+| Phase | 5 |
+| Purpose | LLaMA-style RMSNorm + pre-norm residuals + Phalanx numerical parity |
+| Config | `configs/model.yaml` / experiment `config.yaml` |
+| epsilon | 1e-6 |
+| Result | **Successful** |
+| Validation | See `rmsnorm_validation.json` (`PASS` @ 1e-6) |
+| Lessons | Float32 sum-of-squares + identical ε/γ keep train/serve aligned; shared suite under `../validation/` |
+
+Details: [experiments/ODY-0005/README.md](experiments/ODY-0005/README.md)

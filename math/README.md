@@ -18,7 +18,8 @@ Each note covers:
 | [tensor_shapes.md](tensor_shapes.md) | foundation | Written |
 | [embeddings.md](embeddings.md) | 3 | Written |
 | [rope.md](rope.md) | 4 | Written + cross-validated |
-| [rmsnorm.md](rmsnorm.md) | 5 | Outline (pre-implementation) |
+| [rmsnorm.md](rmsnorm.md) | 5 | Written + cross-validated |
+| [residuals.md](residuals.md) | 5 | Written |
 | [attention.md](attention.md) | 6 | Outline (pre-implementation) |
 | [swiglu.md](swiglu.md) | 7 | Outline (pre-implementation) |
 | [loss.md](loss.md) | 10 | Outline (pre-implementation) |

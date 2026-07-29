@@ -1,9 +1,9 @@
-"""Configuration for Odyssey model components (embeddings + RoPE).
+"""Configuration for Odyssey model components (embeddings + RoPE + RMSNorm).
 
 Why this exists:
-    Embedding and RoPE hyperparameters must stay out of scattered script
-    constants so experiments are reproducible and Phalanx Runtime can mirror
-    the same shapes / θ / scaling.
+    Embedding, RoPE, and normalization hyperparameters must stay out of
+    scattered script constants so experiments are reproducible and Phalanx
+    Runtime can mirror the same shapes / θ / ε / scaling.
 """
 
 from __future__ import annotations
@@ -37,6 +37,7 @@ VALID_INIT_STRATEGIES: tuple[str, ...] = (
 )
 
 RopeScalingType = Literal["none", "linear"]
+NormType = Literal["rmsnorm"]
 
 DTYPE_MAP: dict[str, torch.dtype] = {
     "float32": torch.float32,
@@ -191,6 +192,53 @@ class RopeConfig:
 
 
 @dataclass(slots=True)
+class NormConfig:
+    """RMSNorm hyperparameters — must match Phalanx ``RmsNorm`` / ``rms_norm_eps``."""
+
+    type: NormType = "rmsnorm"
+    hidden_size: int = 768
+    epsilon: float = 1e-6
+    device: str = "cpu"
+    dtype: str = "float32"
+
+    def __post_init__(self) -> None:
+        if self.type != "rmsnorm":
+            raise ValueError(
+                f"norm type must be 'rmsnorm' (LayerNorm / post-norm forbidden), "
+                f"got {self.type!r}"
+            )
+        if self.hidden_size < 1:
+            raise ValueError("hidden_size must be >= 1")
+        if self.epsilon <= 0:
+            raise ValueError("epsilon must be > 0")
+        if self.dtype not in DTYPE_MAP:
+            raise ValueError(f"dtype must be one of {tuple(DTYPE_MAP)}")
+
+    @property
+    def torch_dtype(self) -> torch.dtype:
+        return DTYPE_MAP[self.dtype]
+
+    @property
+    def torch_device(self) -> torch.device:
+        return torch.device(self.device)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> NormConfig:
+        return cls(
+            type=str(data.get("type", "rmsnorm")).lower(),  # type: ignore[arg-type]
+            hidden_size=int(data.get("hidden_size", 768)),
+            epsilon=float(
+                data.get("epsilon", data.get("eps", data.get("rms_norm_eps", 1e-6)))
+            ),
+            device=str(data.get("device", "cpu")),
+            dtype=str(data.get("dtype", "float32")),
+        )
+
+
+@dataclass(slots=True)
 class ModelConfig:
     """Top-level model hyperparameters used by configs/model.yaml."""
 
@@ -204,12 +252,22 @@ class ModelConfig:
     context_length: int = 2048
     embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
     rope: RopeConfig = field(default_factory=RopeConfig)
+    norm: NormConfig = field(default_factory=NormConfig)
 
     def __post_init__(self) -> None:
         if self.hidden_size % self.num_heads != 0:
             raise ValueError("hidden_size must be divisible by num_heads")
         if self.num_heads % self.num_kv_heads != 0:
             raise ValueError("num_heads must be divisible by num_kv_heads")
+        if self.norm.hidden_size != self.hidden_size:
+            # Keep nested norm.D aligned with the model hidden size.
+            self.norm = NormConfig(
+                type=self.norm.type,
+                hidden_size=self.hidden_size,
+                epsilon=self.norm.epsilon,
+                device=self.norm.device,
+                dtype=self.norm.dtype,
+            )
 
     @property
     def head_dim(self) -> int:
@@ -227,12 +285,14 @@ class ModelConfig:
             "context_length": self.context_length,
             "embedding": self.embedding.to_dict(),
             "rope": self.rope.to_dict(),
+            "norm": self.norm.to_dict(),
         }
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ModelConfig:
         emb_raw = data.get("embedding", {}) or {}
         rope_raw = dict(data.get("rope", {}) or {})
+        norm_raw = dict(data.get("norm", {}) or {})
         hidden = int(data.get("hidden_size", 768))
         heads = int(data.get("num_heads", 12))
         head_dim = hidden // heads
@@ -242,6 +302,7 @@ class ModelConfig:
             "max_position_embeddings",
             int(data.get("context_length", 2048)),
         )
+        norm_raw.setdefault("hidden_size", hidden)
         return cls(
             name=str(data.get("name", "odyssey-tiny")),
             vocab_size=int(data.get("vocab_size", data.get("vocabulary_size", 32000))),
@@ -253,6 +314,7 @@ class ModelConfig:
             context_length=int(data.get("context_length", 2048)),
             embedding=EmbeddingConfig.from_dict(emb_raw),
             rope=RopeConfig.from_dict(rope_raw),
+            norm=NormConfig.from_dict(norm_raw),
         )
 
 
@@ -293,3 +355,8 @@ def load_model_config(path: Path | str | None = None) -> ModelConfig:
 def load_rope_config(path: Path | str | None = None) -> RopeConfig:
     """Load RoPE config from ``configs/model.yaml``."""
     return load_model_config(path).rope
+
+
+def load_norm_config(path: Path | str | None = None) -> NormConfig:
+    """Load RMSNorm config from ``configs/model.yaml``."""
+    return load_model_config(path).norm

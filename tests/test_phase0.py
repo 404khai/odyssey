@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_version() -> None:
-    assert __version__ == "0.4.0"
+    assert __version__ == "0.5.0"
 
 
 def test_package_imports() -> None:
@@ -43,9 +43,11 @@ def test_config_loads() -> None:
     assert config["tokenizer"]["path"] == "assets/tokenizer/bpe/odyssey.model"
     assert config["tokenizer"]["type"] == "bpe"
     assert config["tokenizer"]["config"] == "configs/tokenizer.yaml"
-    assert config["experiment"]["id"] == "ODY-0004"
+    assert config["experiment"]["id"] == "ODY-0005"
     assert config["model"]["embedding"]["init_strategy"] == "xavier_uniform"
     assert config["model"]["rope"]["theta"] == 10000.0
+    assert config["model"]["norm"]["type"] == "rmsnorm"
+    assert config["model"]["norm"]["epsilon"] == 1e-6
 
 
 def test_config_yaml_parses_directly() -> None:
@@ -120,6 +122,14 @@ def test_required_docs_exist() -> None:
         "docs/architecture/rope.md",
         "papers/roformer.md",
         "scripts/validate_rope.py",
+        "docs/architecture/rmsnorm.md",
+        "docs/architecture/residuals.md",
+        "papers/rmsnorm.md",
+        "papers/residual_connections.md",
+        "papers/llama_norm.md",
+        "scripts/validate_rmsnorm.py",
+        "math/rmsnorm.md",
+        "math/residuals.md",
         "tokenizer/README.md",
         "tokenizer/docs/bpe.md",
     ]
