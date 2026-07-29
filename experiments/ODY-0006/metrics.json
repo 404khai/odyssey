@@ -1,0 +1,36 @@
+{
+  "hidden_size": 768,
+  "intermediate_size": 2048,
+  "dtype": "float32",
+  "device": "cpu",
+  "shape": [
+    2,
+    64,
+    768
+  ],
+  "parameter_count": 4718592,
+  "memory_bytes": 18874368,
+  "forward_mean_seconds": 0.00580928,
+  "tokens_per_second": 22033.71,
+  "inspect": {
+    "type": "swiglu",
+    "activation": "silu",
+    "hidden_size": 768,
+    "intermediate_size": 2048,
+    "expansion_ratio": 2.6666666666666665,
+    "parameter_count": 4718592,
+    "memory_bytes": 18874368,
+    "projections": {
+      "gate_proj (w1)": 1572864,
+      "up_proj (w3)": 1572864,
+      "down_proj (w2)": 1572864
+    },
+    "shapes": {
+      "input": "(..., 768)",
+      "gate/up": "(..., 2048)",
+      "output": "(..., 768)"
+    },
+    "device": "cpu",
+    "dtype": "torch.float32"
+  }
+}

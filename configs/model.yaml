@@ -1,4 +1,4 @@
-# Odyssey model configuration (Phase 5+)
+# Odyssey model configuration (Phase 6+)
 
 model:
   name: odyssey-tiny
@@ -20,11 +20,9 @@ model:
   # RoPE — must stay aligned with Phalanx layers::Rope / Odyssey Spec v1
   rope:
     theta: 10000.0
-    # head_dim defaults to hidden_size / num_heads (= 64 for Tiny)
-    # Experiment ODY-0004 also exercises rotary_dim=128 with head_dim=128
     rotary_dim: 64
     max_position_embeddings: 2048
-    scaling: none          # none | linear  (NTK / YaRN deferred)
+    scaling: none
     scaling_factor: 1.0
     device: cpu
     dtype: float32
@@ -33,5 +31,14 @@ model:
   norm:
     type: rmsnorm
     epsilon: 0.000001
+    device: cpu
+    dtype: float32
+
+  # SwiGLU FFN — must stay aligned with Phalanx layers::SwiGlu
+  feed_forward:
+    type: swiglu
+    hidden_size: 768
+    intermediate_size: 2048
+    activation: silu
     device: cpu
     dtype: float32

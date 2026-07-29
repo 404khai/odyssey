@@ -1,0 +1,13 @@
+# ODY-0006 experiment snapshot
+
+experiment:
+  id: ODY-0006
+  name: odyssey-swiglu-baseline
+  seed: 42
+
+feed_forward:
+  type: swiglu
+  hidden_size: 768
+  intermediate_size: 2048
+  activation: silu
+  dtype: float32

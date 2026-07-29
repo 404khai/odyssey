@@ -1,27 +1,36 @@
-# SwiGLU — Mathematical Note (Phase 7 outline)
+# SwiGLU — Mathematical Note
 
-> Pre-implementation outline.
+**Status:** Written + cross-validated (ODY-0006 / Phalanx Phase 10)
 
-## Equations (preview)
+## Equations
 
 \[
-\mathrm{Swish}(x) = x \cdot \sigma(x)
+\mathrm{SiLU}(z) = z \cdot \sigma(z) = \frac{z}{1+e^{-z}}
 \]
 
 \[
-\mathrm{SwiGLU}(x) = \mathrm{Swish}(x W_1) \odot (x W_2)
+\mathrm{FFN}(x)=\bigl(\mathrm{SiLU}(x W_1^\top)\odot(x W_3^\top)\bigr)W_2^\top
 \]
 
-Followed by output projection \(W_3\). Llama-style FFN uses this gated unit.
+| Weight | Role | Shape |
+| --- | --- | --- |
+| \(W_1\) | Gate | `(I, D)` |
+| \(W_3\) | Up | `(I, D)` |
+| \(W_2\) | Down | `(D, I)` |
 
-## Complexity (preview)
+(Spec naming — not the outline's older \(W_2\)/`W_3` swap.)
 
-Three projections: roughly \(O(B S D \cdot I)\) with intermediate size \(I\).
+## Complexity
 
-## Numerical stability
-
-Sigmoid saturation is mild with Swish; watch activation scale after residual add + RMSNorm.
+Time \(O(B S D I)\); params \(3DI\) (no biases).
 
 ## PyTorch vs Phalanx
 
-Identical affine + elementwise structure; Phalanx executes fused or sequential GEMMs at inference.
+| Side | Module |
+| --- | --- |
+| Odyssey | `model.swiglu.OdysseySwiGLU` |
+| Phalanx | `phalanx::layers::SwiGlu` |
+
+Parity: `scripts/validate_swiglu.py` (default abs tol `1e-3` — GEMM float
+accumulation order differs between Phalanx's reference ijk kernel and PyTorch;
+mean error is typically ≪ `1e-6`).

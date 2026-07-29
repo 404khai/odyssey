@@ -21,7 +21,7 @@ Each note covers:
 | [rmsnorm.md](rmsnorm.md) | 5 | Written + cross-validated |
 | [residuals.md](residuals.md) | 5 | Written |
 | [attention.md](attention.md) | 6 | Outline (pre-implementation) |
-| [swiglu.md](swiglu.md) | 7 | Outline (pre-implementation) |
+| [swiglu.md](swiglu.md) | 6 | Written + cross-validated |
 | [loss.md](loss.md) | 10 | Outline (pre-implementation) |
 
 Code lives under `model/`. Architecture prose lives under `docs/architecture/`.

@@ -11,8 +11,19 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- Odyssey Specification **v1.0.0** under `spec/` (architecture, shapes, weights, GGUF mapping, tokenizer, runtime contract)
-- Cross-links from README / math / docs to the normative Spec
+- (pending)
+
+---
+
+## [0.6.0] — 2026-07-29
+
+### Added
+
+- LLaMA-style SwiGLU FFN (`model.OdysseySwiGLU`, `activations`, `parameter_counter`)
+- `FeedForwardConfig` + `feed_forward:` in `configs/model.yaml` / `default.yaml`
+- Cross-implementation validator `scripts/validate_swiglu.py` (vs Phalanx)
+- Benchmarks, papers (`swiglu`, `llama_ffn`), `math/swiglu.md`, experiment `ODY-0006`
+- Shared suite entry `../validation/test_swiglu.py`
 
 ---
 

@@ -38,6 +38,8 @@ VALID_INIT_STRATEGIES: tuple[str, ...] = (
 
 RopeScalingType = Literal["none", "linear"]
 NormType = Literal["rmsnorm"]
+FeedForwardType = Literal["swiglu"]
+ActivationType = Literal["silu", "swish", "swiglu"]
 
 DTYPE_MAP: dict[str, torch.dtype] = {
     "float32": torch.float32,
@@ -239,6 +241,60 @@ class NormConfig:
 
 
 @dataclass(slots=True)
+class FeedForwardConfig:
+    """SwiGLU FFN hyperparameters — must match Phalanx ``SwiGlu``."""
+
+    type: FeedForwardType = "swiglu"
+    hidden_size: int = 768
+    intermediate_size: int = 2048
+    activation: ActivationType = "silu"
+    device: str = "cpu"
+    dtype: str = "float32"
+
+    def __post_init__(self) -> None:
+        if self.type != "swiglu":
+            raise ValueError(
+                f"feed_forward type must be 'swiglu' (Spec), got {self.type!r}"
+            )
+        if self.hidden_size < 1:
+            raise ValueError("hidden_size must be >= 1")
+        if self.intermediate_size < 1:
+            raise ValueError("intermediate_size must be >= 1")
+        if self.activation not in ("silu", "swish", "swiglu"):
+            raise ValueError(
+                f"activation must be silu/swish/swiglu, got {self.activation!r}"
+            )
+        if self.dtype not in DTYPE_MAP:
+            raise ValueError(f"dtype must be one of {tuple(DTYPE_MAP)}")
+
+    @property
+    def torch_dtype(self) -> torch.dtype:
+        return DTYPE_MAP[self.dtype]
+
+    @property
+    def torch_device(self) -> torch.device:
+        return torch.device(self.device)
+
+    @property
+    def expansion_ratio(self) -> float:
+        return self.intermediate_size / self.hidden_size
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> FeedForwardConfig:
+        return cls(
+            type=str(data.get("type", "swiglu")).lower(),  # type: ignore[arg-type]
+            hidden_size=int(data.get("hidden_size", 768)),
+            intermediate_size=int(data.get("intermediate_size", 2048)),
+            activation=str(data.get("activation", "silu")).lower(),  # type: ignore[arg-type]
+            device=str(data.get("device", "cpu")),
+            dtype=str(data.get("dtype", "float32")),
+        )
+
+
+@dataclass(slots=True)
 class ModelConfig:
     """Top-level model hyperparameters used by configs/model.yaml."""
 
@@ -253,6 +309,7 @@ class ModelConfig:
     embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
     rope: RopeConfig = field(default_factory=RopeConfig)
     norm: NormConfig = field(default_factory=NormConfig)
+    feed_forward: FeedForwardConfig = field(default_factory=FeedForwardConfig)
 
     def __post_init__(self) -> None:
         if self.hidden_size % self.num_heads != 0:
@@ -260,13 +317,24 @@ class ModelConfig:
         if self.num_heads % self.num_kv_heads != 0:
             raise ValueError("num_heads must be divisible by num_kv_heads")
         if self.norm.hidden_size != self.hidden_size:
-            # Keep nested norm.D aligned with the model hidden size.
             self.norm = NormConfig(
                 type=self.norm.type,
                 hidden_size=self.hidden_size,
                 epsilon=self.norm.epsilon,
                 device=self.norm.device,
                 dtype=self.norm.dtype,
+            )
+        if (
+            self.feed_forward.hidden_size != self.hidden_size
+            or self.feed_forward.intermediate_size != self.intermediate_size
+        ):
+            self.feed_forward = FeedForwardConfig(
+                type=self.feed_forward.type,
+                hidden_size=self.hidden_size,
+                intermediate_size=self.intermediate_size,
+                activation=self.feed_forward.activation,
+                device=self.feed_forward.device,
+                dtype=self.feed_forward.dtype,
             )
 
     @property
@@ -286,6 +354,7 @@ class ModelConfig:
             "embedding": self.embedding.to_dict(),
             "rope": self.rope.to_dict(),
             "norm": self.norm.to_dict(),
+            "feed_forward": self.feed_forward.to_dict(),
         }
 
     @classmethod
@@ -293,7 +362,9 @@ class ModelConfig:
         emb_raw = data.get("embedding", {}) or {}
         rope_raw = dict(data.get("rope", {}) or {})
         norm_raw = dict(data.get("norm", {}) or {})
+        ff_raw = dict(data.get("feed_forward", {}) or {})
         hidden = int(data.get("hidden_size", 768))
+        intermediate = int(data.get("intermediate_size", 2048))
         heads = int(data.get("num_heads", 12))
         head_dim = hidden // heads
         rope_raw.setdefault("head_dim", head_dim)
@@ -303,11 +374,13 @@ class ModelConfig:
             int(data.get("context_length", 2048)),
         )
         norm_raw.setdefault("hidden_size", hidden)
+        ff_raw.setdefault("hidden_size", hidden)
+        ff_raw.setdefault("intermediate_size", intermediate)
         return cls(
             name=str(data.get("name", "odyssey-tiny")),
             vocab_size=int(data.get("vocab_size", data.get("vocabulary_size", 32000))),
             hidden_size=hidden,
-            intermediate_size=int(data.get("intermediate_size", 2048)),
+            intermediate_size=intermediate,
             num_layers=int(data.get("num_layers", 12)),
             num_heads=heads,
             num_kv_heads=int(data.get("num_kv_heads", heads)),
@@ -315,6 +388,7 @@ class ModelConfig:
             embedding=EmbeddingConfig.from_dict(emb_raw),
             rope=RopeConfig.from_dict(rope_raw),
             norm=NormConfig.from_dict(norm_raw),
+            feed_forward=FeedForwardConfig.from_dict(ff_raw),
         )
 
 
@@ -360,3 +434,8 @@ def load_rope_config(path: Path | str | None = None) -> RopeConfig:
 def load_norm_config(path: Path | str | None = None) -> NormConfig:
     """Load RMSNorm config from ``configs/model.yaml``."""
     return load_model_config(path).norm
+
+
+def load_feed_forward_config(path: Path | str | None = None) -> FeedForwardConfig:
+    """Load SwiGLU FFN config from ``configs/model.yaml``."""
+    return load_model_config(path).feed_forward

@@ -1,0 +1,29 @@
+{
+  "component": "SwiGLU",
+  "odyssey_spec": "1.0.0",
+  "manifest": {
+    "shape": [
+      2,
+      8,
+      64
+    ],
+    "hidden_size": 64,
+    "intermediate_size": 128,
+    "seed": 0
+  },
+  "comparison": {
+    "max_error": 0.0001220703125,
+    "mean_error": 4.7479989007115364e-07,
+    "max_relative_error": 6.281857277149283e-07,
+    "tolerance": 0.001,
+    "pass": true,
+    "status": "PASS"
+  },
+  "max_error": 0.0001220703125,
+  "mean_error": 4.7479989007115364e-07,
+  "max_relative_error": 6.281857277149283e-07,
+  "tolerance": 0.001,
+  "status": "PASS",
+  "work_dir": "/var/folders/c0/32vfjvv9233c0nmghgqt_mp40000gn/T/swiglu_val_slhw23o4",
+  "message": "Odyssey and Phalanx are mathematically identical."
+}

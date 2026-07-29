@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_version() -> None:
-    assert __version__ == "0.5.0"
+    assert __version__ == "0.6.0"
 
 
 def test_package_imports() -> None:
@@ -43,11 +43,13 @@ def test_config_loads() -> None:
     assert config["tokenizer"]["path"] == "assets/tokenizer/bpe/odyssey.model"
     assert config["tokenizer"]["type"] == "bpe"
     assert config["tokenizer"]["config"] == "configs/tokenizer.yaml"
-    assert config["experiment"]["id"] == "ODY-0005"
+    assert config["experiment"]["id"] == "ODY-0006"
     assert config["model"]["embedding"]["init_strategy"] == "xavier_uniform"
     assert config["model"]["rope"]["theta"] == 10000.0
     assert config["model"]["norm"]["type"] == "rmsnorm"
     assert config["model"]["norm"]["epsilon"] == 1e-6
+    assert config["model"]["feed_forward"]["type"] == "swiglu"
+    assert config["model"]["feed_forward"]["intermediate_size"] == 2048
 
 
 def test_config_yaml_parses_directly() -> None:
@@ -130,6 +132,12 @@ def test_required_docs_exist() -> None:
         "scripts/validate_rmsnorm.py",
         "math/rmsnorm.md",
         "math/residuals.md",
+        "docs/architecture/swiglu.md",
+        "docs/architecture/feedforward.md",
+        "papers/swiglu.md",
+        "papers/llama_ffn.md",
+        "scripts/validate_swiglu.py",
+        "math/swiglu.md",
         "tokenizer/README.md",
         "tokenizer/docs/bpe.md",
     ]

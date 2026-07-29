@@ -61,17 +61,19 @@ Development proceeds **one phase at a time**. Complete, document, commit, then w
 
 ---
 
-## Phase 6 — Multi-Head Attention
+## Phase 6 — SwiGLU Feed Forward *(complete)*
 
-- Causal masking
-- Scaled dot-product attention
+- LLaMA-style SwiGLU (`OdysseySwiGLU`)
+- Manual SiLU, configurable intermediate size
+- Cross-implementation validation vs Phalanx (`scripts/validate_swiglu.py`)
+- ODY-0006 baseline
 
 ---
 
-## Phase 7 — SwiGLU Feed Forward
+## Phase 7 — Multi-Head Attention
 
-- Activation research
-- FFN implementation
+- Causal masking
+- Scaled dot-product attention
 
 ---
 
