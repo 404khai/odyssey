@@ -49,12 +49,23 @@ Math companion: [math/embeddings.md](math/embeddings.md)
 
 ---
 
+## Phase 5 — RMSNorm & Residuals *(complete)*
+
+| Paper / Study | Summary |
+| --- | --- |
+| RMSNorm (Zhang & Sennrich) | [papers/rmsnorm.md](papers/rmsnorm.md) |
+| Residual connections (Vaswani et al.) | [papers/residual_connections.md](papers/residual_connections.md) |
+| LLaMA pre-norm notes | [papers/llama_norm.md](papers/llama_norm.md) |
+
+Math companions: [math/rmsnorm.md](math/rmsnorm.md), [math/residuals.md](math/residuals.md)
+
+---
+
 ## Planned Reading (later phases)
 
 | Topic | Canonical paper / resource | Phase |
 | --- | --- | --- |
 | Attention | *Attention Is All You Need* (Vaswani et al., 2017) | 6+ |
-| RMSNorm | *Root Mean Square Layer Normalization* | 5 |
 | SwiGLU | *GLU Variants Improve Transformer* (Shazeer) | 7 |
 | GPT-style LMs | GPT / Llama technical reports | 9–10 |
 | DPO | *Direct Preference Optimization* (Rafailov et al.) | 14 |

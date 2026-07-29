@@ -1,4 +1,4 @@
-# Odyssey model configuration (Phase 4+)
+# Odyssey model configuration (Phase 5+)
 
 model:
   name: odyssey-tiny
@@ -26,5 +26,12 @@ model:
     max_position_embeddings: 2048
     scaling: none          # none | linear  (NTK / YaRN deferred)
     scaling_factor: 1.0
+    device: cpu
+    dtype: float32
+
+  # RMSNorm — must stay aligned with Phalanx layers::RmsNorm
+  norm:
+    type: rmsnorm
+    epsilon: 0.000001
     device: cpu
     dtype: float32

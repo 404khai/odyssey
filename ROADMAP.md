@@ -51,10 +51,13 @@ Development proceeds **one phase at a time**. Complete, document, commit, then w
 
 ---
 
-## Phase 5 — RMSNorm & Residuals
+## Phase 5 — RMSNorm & Residuals *(complete)*
 
-- RMSNorm
-- Residual connections
+- LLaMA-style RMSNorm (`OdysseyRMSNorm`)
+- Pre-norm residual helpers (`residual_add` / `pre_norm_residual`)
+- Configurable `norm.epsilon` in `configs/model.yaml`
+- Cross-implementation validation vs Phalanx (`scripts/validate_rmsnorm.py`)
+- ODY-0005 baseline
 
 ---
 
